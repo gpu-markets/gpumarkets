@@ -53,3 +53,35 @@ export interface ResearchNote {
   deck?: string;
   isLead?: boolean;
 }
+
+/**
+ * News items fall into two mutually-exclusive categories:
+ *   - `market`  — first-party observations from the daily fixing
+ *                 (outlier rejections, venue onboardings, methodology
+ *                 updates). Optional deep-link into /data or /venues.
+ *   - `press`   — third-party industry coverage. Always has an external
+ *                 source URL and an attribution.
+ * Discriminated on `kind` so callers can exhaustively switch without
+ * optional-field guards.
+ */
+export type NewsKind = 'market' | 'press';
+
+interface NewsItemBase {
+  slug: string;
+  date: string;
+  title: string;
+  deck?: string;
+}
+
+export interface MarketEvent extends NewsItemBase {
+  kind: 'market';
+  deepLink?: string;
+}
+
+export interface PressItem extends NewsItemBase {
+  kind: 'press';
+  source: string;
+  sourceUrl: string;
+}
+
+export type NewsItem = MarketEvent | PressItem;
