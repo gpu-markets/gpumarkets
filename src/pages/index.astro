@@ -33,26 +33,27 @@ import WhyThisExists from '../components/WhyThisExists.astro';
 import MethodologyQuote from '../components/MethodologyQuote.astro';
 import VenueCoverage from '../components/VenueCoverage.astro';
 import Research from '../components/Research.astro';
+import News from '../components/News.astro';
 import { trainingTier, inferenceTier } from '../lib/series-data';
 
 const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
   {
-    label: 'Largest Decline \u00B7 7d',
-    ticker: 'NVIDIA B200 SXM \u00B7 Spot',
+    label: 'Largest Decline · 7d',
+    ticker: 'NVIDIA B200 SXM · Spot',
     big: '\u22124.72%',
     bigClass: 'neg',
     sub: 'from $6.18 to $5.88',
   },
   {
-    label: 'Largest Cross\u2011Venue Spread',
-    ticker: 'H100 SXM \u00B7 Spot',
+    label: 'Largest Cross‑Venue Spread',
+    ticker: 'H100 SXM · Spot',
     big: '$0.74',
     bigClass: '',
     sub: 'Vast.ai $1.87 to Lambda $2.61',
   },
   {
     label: 'New Outlier Rejection',
-    ticker: 'Hyperbolic \u00B7 H100 SXM',
+    ticker: 'Hyperbolic · H100 SXM',
     big: '+2.8 MAD',
     bigClass: 'mute',
     sub: "excluded from today's fix",
@@ -61,13 +62,13 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
 ---
 
 <Base
-  title="GPU Markets \u00B7 A reference price for the GPU rental market"
+  title="GPU Markets · A reference price for the GPU rental market"
   currentPage="latest"
   withAppScripts={true}
 >
   <Hero
     headline="A reference price for the GPU rental market."
-    deck="Daily fixings for spot, on\u2011demand, and reserved rentals across 12 venues. Open data. Open methodology. Published at 00:30 UTC."
+    deck="Daily fixings for spot, on‑demand, and reserved rentals across 12 venues. Open data. Open methodology. Published at 00:30 UTC."
   />
 
   <WhatThisIs />
@@ -78,10 +79,10 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
 
   <section>
     <div class="wrap">
-      <Eyebrow number="01" label="Training Tier \u00B7 Latest Fixing" aside="8 series" />
+      <Eyebrow number="01" label="Training Tier · Latest Fixing" aside="8 series" />
       <FixingTable series={trainingTier} ariaLabel="Training-tier fixings" />
       <p class="footnote">
-        Fixings quoted as <span class="mono">USD per GPU\u2011hour</span>,
+        Fixings quoted as <span class="mono">USD per GPU‑hour</span>,
         rounded to four decimal places. Δ columns show percentage change
         against the previous fix, the fix seven days ago, and the fix
         thirty days ago. <span class="mono">Obs</span> is the number of
@@ -96,13 +97,13 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
 
   <section>
     <div class="wrap">
-      <Eyebrow number="02" label="Inference Tier \u00B7 Latest Fixing" aside="5 series" />
+      <Eyebrow number="02" label="Inference Tier · Latest Fixing" aside="5 series" />
       <FixingTable series={inferenceTier} ariaLabel="Inference-tier fixings" />
       <p class="footnote">
-        Inference\u2011tier series are priced the same way as training
+        Inference‑tier series are priced the same way as training
         series, but include consumer and workstation cards (RTX 4090, RTX
-        5090) and low\u2011power accelerators (L4, T4) that dominate
-        high\u2011throughput serving workloads.
+        5090) and low‑power accelerators (L4, T4) that dominate
+        high‑throughput serving workloads.
       </p>
     </div>
   </section>
@@ -117,4 +118,5 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
   <MethodologyQuote />
   <VenueCoverage />
   <Research />
+  <News />
 </Base>

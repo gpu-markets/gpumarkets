@@ -1,0 +1,104 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import { leadNews as lead, previousNews as previous } from '../lib/news';
+
+/**
+ * § 07 · News — landing-page teaser. Mirrors Research.astro's
+ * lead-note + previous-list pattern so shared.css applies unchanged.
+ *
+ * Two discriminated kinds:
+ *   - market: first-party observations. Primary link is the optional
+ *             deepLink into /data or /venues; falls back to the news
+ *             archive anchor `/news#{slug}`.
+ *   - press:  third-party coverage. Primary link is the external
+ *             sourceUrl, opened in a new tab with rel="noopener".
+ *
+ * Data lives in src/lib/news.ts so the /news archive and /news.xml
+ * feed consume the same source.
+ */
+
+function kindBadge(kind: 'market' | 'press'): string {
+  return kind === 'market' ? '[ MARKET ]' : '[ PRESS ]';
+}
+
+const leadPrimary =
+  lead.kind === 'press'
+    ? { href: lead.sourceUrl, external: true }
+    : lead.deepLink
+      ? { href: lead.deepLink, external: false }
+      : { href: `/news#${lead.slug}`, external: false };
+---
+
+<section>
+  <div class="wrap">
+    <Eyebrow number="07" label="News · Latest Event" aside={lead.date} />
+
+    <div class="lead-note">
+      <div class="lead-date">{kindBadge(lead.kind)} · {lead.date}</div>
+      <h2 class="lead-head">
+        {
+          leadPrimary.external ? (
+            <a href={leadPrimary.href} target="_blank" rel="noopener">
+              {lead.title}
+            </a>
+          ) : (
+            <a href={leadPrimary.href}>{lead.title}</a>
+          )
+        }
+      </h2>
+      {lead.deck && <p class="lead-deck">{lead.deck}</p>}
+      <p class="lead-more">
+        {
+          lead.kind === 'press' ? (
+            <a href={lead.sourceUrl} target="_blank" rel="noopener">
+              Read at {lead.source} →
+            </a>
+          ) : lead.deepLink ? (
+            <a href={lead.deepLink}>Open {lead.deepLink} →</a>
+          ) : (
+            <a href={`/news#${lead.slug}`}>Read in news archive →</a>
+          )
+        }
+      </p>
+    </div>
+
+    <div class="eyebrow-row previous-eyebrow">
+      <span class="num">§</span>
+      <span class="dot">·</span>
+      <span class="label">Previous</span>
+    </div>
+    <div class="eyebrow-rule"></div>
+
+    <div class="research">
+      <ol>
+        {
+          previous.map((n) => {
+            const external = n.kind === 'press';
+            const href = external ? n.sourceUrl : `/news#${n.slug}`;
+            const badge =
+              n.kind === 'press' ? `[ PRESS · ${n.source} ]` : '[ MARKET ]';
+            return (
+              <li>
+                <span class="d">{n.date}</span>
+                <span class="t">
+                  {external ? (
+                    <a href={href} target="_blank" rel="noopener">
+                      {n.title}
+                    </a>
+                  ) : (
+                    <a href={href}>{n.title}</a>
+                  )}
+                  <span class="k">{badge}</span>
+                </span>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
+
+    <p class="lead-more">
+      <a href="/news">Read the full news archive →</a>
+    </p>
+  </div>
+</section>

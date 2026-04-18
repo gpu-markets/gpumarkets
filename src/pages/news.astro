@@ -1,0 +1,80 @@
+---
+/**
+ * News archive — reverse-chronological list of every news item, mixing
+ * market events (first-party observations) and press items (third-party
+ * coverage). Anchor IDs on each item match the slug used in the RSS feed
+ * guid, so /news#{slug} is a stable deep-link.
+ *
+ * Phase 2 option: turn each market-event slug into its own
+ * /news/{slug}/ page when a market event warrants a full writeup.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import { allNews } from '../lib/news';
+
+function kindBadge(kind: 'market' | 'press'): string {
+  return kind === 'market' ? '[ MARKET ]' : '[ PRESS ]';
+}
+---
+
+<Base title="News · GPU Markets" currentPage="news">
+  <section class="hero">
+    <div class="wrap">
+      <h1>News</h1>
+      <p class="deck">
+        Market events observed in the daily fixing, and third‑party
+        coverage of the GPU rental market. Updated alongside the 00:30
+        UTC release.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="News Archive" aside={`${allNews.length} items`} />
+
+      {
+        allNews.map((n) => {
+          const external = n.kind === 'press';
+          const primaryHref = external ? n.sourceUrl : `#${n.slug}`;
+          return (
+            <article id={n.slug} class="lead-note">
+              <div class="lead-date">
+                {kindBadge(n.kind)} · {n.date}
+                {n.kind === 'press' && <> · {n.source}</>}
+              </div>
+              <h2 class="lead-head">
+                {external ? (
+                  <a href={primaryHref} target="_blank" rel="noopener">
+                    {n.title}
+                  </a>
+                ) : (
+                  <a href={primaryHref}>{n.title}</a>
+                )}
+              </h2>
+              {n.deck && <p class="lead-deck">{n.deck}</p>}
+              <p class="lead-more">
+                {n.kind === 'press' ? (
+                  <a href={n.sourceUrl} target="_blank" rel="noopener">
+                    Read at {n.source} →
+                  </a>
+                ) : n.deepLink ? (
+                  <a href={n.deepLink}>Open {n.deepLink} →</a>
+                ) : (
+                  <a href={`#${n.slug}`}>Permalink →</a>
+                )}
+              </p>
+            </article>
+          );
+        })
+      }
+
+      <p class="footnote">
+        Market‑event items describe observations from the daily fixing at
+        00:30 UTC. Press items link out to third‑party coverage and open
+        in a new tab. All dates are UTC. Subscribe to the news RSS feed at
+        <a href="/news.xml">/news.xml</a>.
+      </p>
+    </div>
+  </section>
+</Base>

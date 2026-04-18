@@ -7,7 +7,7 @@
 export interface Props {
   title: string;
   description?: string;
-  currentPage?: 'latest' | 'methodology' | 'data' | 'venues' | 'research';
+  currentPage?: 'latest' | 'methodology' | 'data' | 'venues' | 'research' | 'news';
   issueNumber?: string;
   releaseDate?: string;
   releaseTimeTop?: string;
@@ -21,9 +21,13 @@ const {
   currentPage = 'latest',
   issueNumber = '042',
   releaseDate = '18 April 2026',
-  releaseTimeTop = '2026\u2011\u200404\u201118 · 00:30:00 UTC',
+  releaseTimeTop = '2026‑ 04‑18 · 00:30:00 UTC',
   withAppScripts = false,
 } = Astro.props;
+
+const SITE_URL = 'https://gpumarkets.dev';
+const canonical = new URL(Astro.url.pathname, SITE_URL).toString();
+const ogImage = `${SITE_URL}/og.png`;
 ---
 
 <!doctype html>
@@ -33,6 +37,26 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="GPU Markets" href="/feed.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GPU Markets" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@gpumarkets" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <meta name="theme-color" content="#111111" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -74,6 +98,8 @@ const {
         <a href="/venues" class={currentPage === 'venues' ? 'current' : ''}>Venues</a>
         <span class="sep">·</span>
         <a href="/research" class={currentPage === 'research' ? 'current' : ''}>Research</a>
+        <span class="sep">·</span>
+        <a href="/news" class={currentPage === 'news' ? 'current' : ''}>News</a>
       </div>
     </nav>
 
