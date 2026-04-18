@@ -1,35 +1,20 @@
 ---
 import Eyebrow from './Eyebrow.astro';
-import type { ResearchNote } from '../lib/types';
+import { leadNote as lead, previousNotes as previous } from '../lib/research-notes';
 
 /**
  * § 06 · Research — the lead note (prominent .lead-note block) and an
  * ordered list of previous notes (.research ol). Phase 1 links all
  * entries to /research; Phase 2 will generate per-slug MDX pages.
+ *
+ * Data lives in src/lib/research-notes.ts so the RSS feed
+ * (src/pages/feed.xml.ts) can consume the same source.
  */
-
-const lead: ResearchNote = {
-  slug: 'b200-curve-decomposition',
-  date: '2026\u201104\u201111',
-  title: 'Decomposing the B200 curve \u2014 scarcity or generation?',
-  deck:
-    "The B200 SXM spot series has fallen 8.3% over the last 30 days, its steepest drop since launch. " +
-    "A log\u2011linear decomposition against supply announcements and CoreWeave's reported order book " +
-    "suggests demand\u2011side exhaustion, not generational obsolescence. Charts and data below.",
-  isLead: true,
-};
-
-const previous: ResearchNote[] = [
-  { slug: 'lambda-vast-spread',        date: '2026\u201104\u201104', title: 'The Lambda\u2013Vast spread is structural, not arbitrage.' },
-  { slug: 'forward-curve-reserved',    date: '2026\u201103\u201128', title: 'Constructing a forward curve from reserved\u2011rate differentials.' },
-  { slug: 'h100-h200-residual',        date: '2026\u201103\u201121', title: 'Implied GPU residual value: H100 vs H200.' },
-  { slug: 'hedging-2024-backtest',     date: '2026\u201103\u201114', title: 'Could a neocloud have hedged the 2024 crash? A backtest.' },
-];
 ---
 
 <section>
   <div class="wrap">
-    <Eyebrow number="06" label="Research \u00B7 Lead Note" aside={lead.date} />
+    <Eyebrow number="06" label="Research · Lead Note" aside={lead.date} />
     <div class="lead-note">
       <div class="lead-date">{lead.date}</div>
       <h2 class="lead-head"><a href="/research">{lead.title}</a></h2>
@@ -39,7 +24,7 @@ const previous: ResearchNote[] = [
 
     <div class="eyebrow-row previous-eyebrow">
       <span class="num">\u00A7</span>
-      <span class="dot">\u00B7</span>
+      <span class="dot">·</span>
       <span class="label">Previous Notes</span>
     </div>
     <div class="eyebrow-rule"></div>
