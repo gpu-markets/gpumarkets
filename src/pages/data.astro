@@ -1,0 +1,42 @@
+---
+/**
+ * Data — placeholder for the downloads / API page. Phase 2 will list the
+ * latest fixing JSON, historical CSVs, the Parquet archive, and the
+ * read-only SQL endpoint, with auto-generated badges per series.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="Data \u00B7 GPU Markets" currentPage="data">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Data</h1>
+      <p class="deck">
+        Every fix, every input observation, every revision \u2014 published
+        under <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a>
+        as flat files and a queryable archive.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap" id="historical">
+      <Eyebrow label="Coming In Phase 2" />
+      <div class="prose">
+        <p>
+          The data downloads page will list the latest fixing JSON,
+          end\u2011of\u2011day CSVs going back to first observation, the
+          Parquet archive of raw observations, and shields\u2011style
+          badges per series for embedding in dashboards and slide decks.
+        </p>
+        <p>
+          Until then, every fix and every input observation is committed
+          to the
+          <a href="https://github.com/gpu-markets/gpu-markets" rel="noopener">project repository</a>
+          under <code>data/</code>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

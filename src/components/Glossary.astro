@@ -1,0 +1,23 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+const entries: [string, string][] = [
+  ['SPOT', 'Per-hour rate on a marketplace or community cloud. Pay-as-you-go, cheapest, no commitment, supply varies by hour.'],
+  ['OD',   'On-demand rate from a dedicated provider. Higher price than spot, guaranteed supply, cancel anytime.'],
+  ['R1Y',  'One-year reserved contract. Locked in for 12 months at a discounted rate in exchange for committed capacity.'],
+];
+---
+
+<Eyebrow label="Glossary" />
+<table class="glossary" aria-label="Ticker glossary">
+  <tbody>
+    {
+      entries.map(([term, def]) => (
+        <tr>
+          <td class="term">{term}</td>
+          <td class="def">{def}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>

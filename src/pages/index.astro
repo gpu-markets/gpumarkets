@@ -1,0 +1,120 @@
+---
+/**
+ * Landing page — composes every section of the standalone HTML in order.
+ * Must pass `withAppScripts={true}` to Base so the hero chart and
+ * row-toggle wiring in /public/app.js is included.
+ *
+ * Section order (must stay in sync with the standalone HTML):
+ *   § Hero
+ *   § What This Is
+ *   § Today At A Glance
+ *   § Audience row
+ *   § 01  Training Tier · Latest Fixing + hero chart + constituent venues
+ *   § 02  Inference Tier · Latest Fixing
+ *   §     Glossary
+ *   § 03  Why This Exists
+ *   § 04  Methodology
+ *   § 05  Venue Coverage
+ *   § 06  Research · Lead Note
+ */
+
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WhatThisIs from '../components/WhatThisIs.astro';
+import TodayAtAGlance from '../components/TodayAtAGlance.astro';
+import type { GlanceItem } from '../components/TodayAtAGlance.astro';
+import AudienceRow from '../components/AudienceRow.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import FixingTable from '../components/FixingTable.astro';
+import HeroChart from '../components/HeroChart.astro';
+import ConstituentVenues from '../components/ConstituentVenues.astro';
+import Glossary from '../components/Glossary.astro';
+import WhyThisExists from '../components/WhyThisExists.astro';
+import MethodologyQuote from '../components/MethodologyQuote.astro';
+import VenueCoverage from '../components/VenueCoverage.astro';
+import Research from '../components/Research.astro';
+import { trainingTier, inferenceTier } from '../lib/series-data';
+
+const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
+  {
+    label: 'Largest Decline \u00B7 7d',
+    ticker: 'NVIDIA B200 SXM \u00B7 Spot',
+    big: '\u22124.72%',
+    bigClass: 'neg',
+    sub: 'from $6.18 to $5.88',
+  },
+  {
+    label: 'Largest Cross\u2011Venue Spread',
+    ticker: 'H100 SXM \u00B7 Spot',
+    big: '$0.74',
+    bigClass: '',
+    sub: 'Vast.ai $1.87 to Lambda $2.61',
+  },
+  {
+    label: 'New Outlier Rejection',
+    ticker: 'Hyperbolic \u00B7 H100 SXM',
+    big: '+2.8 MAD',
+    bigClass: 'mute',
+    sub: "excluded from today's fix",
+  },
+];
+---
+
+<Base
+  title="GPU Markets \u00B7 A reference price for the GPU rental market"
+  currentPage="latest"
+  withAppScripts={true}
+>
+  <Hero
+    headline="A reference price for the GPU rental market."
+    deck="Daily fixings for spot, on\u2011demand, and reserved rentals across 12 venues. Open data. Open methodology. Published at 00:30 UTC."
+  />
+
+  <WhatThisIs />
+
+  <TodayAtAGlance items={glanceItems} />
+
+  <AudienceRow />
+
+  <section>
+    <div class="wrap">
+      <Eyebrow number="01" label="Training Tier \u00B7 Latest Fixing" aside="8 series" />
+      <FixingTable series={trainingTier} ariaLabel="Training-tier fixings" />
+      <p class="footnote">
+        Fixings quoted as <span class="mono">USD per GPU\u2011hour</span>,
+        rounded to four decimal places. Δ columns show percentage change
+        against the previous fix, the fix seven days ago, and the fix
+        thirty days ago. <span class="mono">Obs</span> is the number of
+        observations contributing to today's estimator after outlier
+        rejection; <span class="mono">Venues</span> is eligible venues
+        over total venues covered.
+      </p>
+      <HeroChart />
+      <ConstituentVenues />
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow number="02" label="Inference Tier \u00B7 Latest Fixing" aside="5 series" />
+      <FixingTable series={inferenceTier} ariaLabel="Inference-tier fixings" />
+      <p class="footnote">
+        Inference\u2011tier series are priced the same way as training
+        series, but include consumer and workstation cards (RTX 4090, RTX
+        5090) and low\u2011power accelerators (L4, T4) that dominate
+        high\u2011throughput serving workloads.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Glossary />
+    </div>
+  </section>
+
+  <WhyThisExists />
+  <MethodologyQuote />
+  <VenueCoverage />
+  <Research />
+</Base>

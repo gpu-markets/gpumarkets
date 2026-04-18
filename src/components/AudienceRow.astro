@@ -1,0 +1,23 @@
+---
+const audiences = [
+  'FOR NEOCLOUD CFOs',
+  'FOR INFRASTRUCTURE ANALYSTS',
+  'FOR JOURNALISTS',
+  'FOR RESEARCHERS',
+];
+---
+
+<section class="audience-section">
+  <div class="wrap">
+    <p class="audience-row">
+      {
+        audiences.map((a, i) => (
+          <>
+            {a}
+            {i < audiences.length - 1 && <span class="sep">·</span>}
+          </>
+        ))
+      }
+    </p>
+  </div>
+</section>

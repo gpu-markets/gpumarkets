@@ -1,0 +1,84 @@
+---
+/**
+ * ConstituentVenues — the <details> expansion showing the panel of
+ * venues behind today's H100 SXM Spot fixing.
+ * Uses the HTML's class names: .constituents-wrap, .constituents, .vlink, .tag
+ */
+
+interface VenueRow {
+  name: string;
+  url: string;
+  price: number;
+  delta7d: number;
+  weight: string;
+  tag: 'yes' | 'no' | 'cross';
+  tagLabel: string;
+}
+
+const rows: VenueRow[] = [
+  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',           price: 1.8704, delta7d: -4.20, weight: '18.3%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',         price: 2.0412, delta7d: -2.80, weight: '16.1%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud', price: 2.2900, delta7d: -1.10, weight: '14.7%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',          price: 1.9816, delta7d: -3.50, weight: '15.2%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',           price: 2.1100, delta7d: -2.20, weight: '13.8%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'TensorDock',      url: 'https://www.tensordock.com/',             price: 2.0144, delta7d: -3.10, weight: '11.9%', tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                  price: 2.2500, delta7d: -1.80, weight: '9.0%',  tag: 'yes',   tagLabel: 'Yes' },
+  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                 price: 2.6100, delta7d:  0.40, weight: '\u2014', tag: 'no',    tagLabel: 'No (outlier)' },
+  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',               price: 2.0900, delta7d: -2.50, weight: '\u2014', tag: 'cross', tagLabel: 'Cross\u2011check' },
+];
+
+function pctClass(v: number) {
+  if (v > 0) return 'pos';
+  if (v < 0) return 'neg';
+  return 'zero';
+}
+function pctSign(v: number) {
+  if (v > 0) return '+';
+  if (v < 0) return '\u2212';
+  return '\u00A0';
+}
+---
+
+<details class="constituents-wrap">
+  <summary>
+    <span class="chev">›</span>
+    <span>Constituent venues for H100 SXM Spot</span>
+    <span class="sub">9 eligible · 1 outlier · 1 cross-check</span>
+  </summary>
+  <div class="body">
+    <div class="table-scroll">
+      <table class="constituents" aria-label="Constituent venues for H100 SXM Spot">
+        <thead>
+          <tr>
+            <th scope="col">Venue</th>
+            <th scope="col" class="num">Price</th>
+            <th scope="col" class="num">Δ 7d</th>
+            <th scope="col" class="num">Weight</th>
+            <th scope="col">Contributed</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((r) => (
+              <tr>
+                <td><a class="vlink" href={r.url} target="_blank" rel="noopener">{r.name}</a></td>
+                <td class="num">${r.price.toFixed(4)}</td>
+                <td class={`num pct ${pctClass(r.delta7d)}`}>
+                  <span class="sign">{pctSign(r.delta7d)}</span>{Math.abs(r.delta7d).toFixed(2)}%
+                </td>
+                <td class="num">{r.weight}</td>
+                <td><span class={`tag ${r.tag}`}>{r.tagLabel}</span></td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">
+      Weights proportional to inverse MAD distance from the trimmed-mean
+      estimator after outlier rejection. Hyperbolic excluded today:
+      &gt;2.5 MAD above the cluster. Full rejection log in
+      <a class="vlink" href="/methodology">methodology</a>.
+    </p>
+  </div>
+</details>

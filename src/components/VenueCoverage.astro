@@ -1,0 +1,86 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+/**
+ * § 05 · Venue Coverage — full 12-venue table with status tags.
+ * Mirrors the standalone HTML's `.venues` table treatment.
+ *
+ * Status legend:
+ *   - `yes`  → Yes           (full-weight contributor to the fix)
+ *   - `cross` → Cross-check  (reported but not weighted)
+ *   - `ref`   → Reference    (hyperscaler list prices, excluded from the estimator)
+ */
+
+type VenueStatus = 'yes' | 'cross' | 'ref';
+
+interface VenueRow {
+  name: string;
+  url: string;
+  access: string;
+  status: VenueStatus;
+  firstObs: string; // ISO date, wrapped with non-breaking hyphens on render
+}
+
+const rows: VenueRow[] = [
+  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201114' },
+  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',                                                     access: 'GraphQL API',           status: 'yes',   firstObs: '2026\u201102\u201114' },
+  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud',                                            access: 'HTML',                  status: 'yes',   firstObs: '2026\u201102\u201114' },
+  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',                                                      access: 'HTML + CLI',            status: 'yes',   firstObs: '2026\u201102\u201117' },
+  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201117' },
+  { name: 'TensorDock',      url: 'https://www.tensordock.com/',                                                         access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201118' },
+  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                                                              access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201118' },
+  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                                                             access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201121' },
+  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',                                                           access: 'Aggregator',            status: 'cross', firstObs: '2026\u201102\u201121' },
+  { name: 'AWS (p5 family)', url: 'https://aws.amazon.com/ec2/instance-types/p5/',                                       access: 'Official Pricing API',  status: 'ref',   firstObs: '2026\u201102\u201114' },
+  { name: 'GCP (A3 family)', url: 'https://cloud.google.com/compute/docs/accelerator-optimized-machines',                access: 'Cloud Billing API',     status: 'ref',   firstObs: '2026\u201102\u201114' },
+  { name: 'Azure (ND v5)',   url: 'https://learn.microsoft.com/en-us/azure/virtual-machines/nd-h100-v5-series',          access: 'Retail Prices API',     status: 'ref',   firstObs: '2026\u201102\u201114' },
+];
+
+const tagLabel: Record<VenueStatus, string> = {
+  yes: 'Yes',
+  cross: 'Cross\u2011check',
+  ref: 'Reference',
+};
+---
+
+<section>
+  <div class="wrap">
+    <Eyebrow number="05" label="Venue Coverage" aside="12 venues" />
+    <div class="table-scroll">
+      <table class="venues" aria-label="Venue coverage and contribution status">
+        <thead>
+          <tr>
+            <th scope="col">Venue</th>
+            <th scope="col">Access</th>
+            <th scope="col">Eligible</th>
+            <th scope="col" class="num">First obs.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map((r) => (
+              <tr>
+                <td>
+                  <a class="vlink" href={r.url} target="_blank" rel="noopener">
+                    {r.name}
+                  </a>
+                </td>
+                <td>{r.access}</td>
+                <td><span class={`tag ${r.status}`}>{tagLabel[r.status]}</span></td>
+                <td class="num">{r.firstObs}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">
+      Eligibility is a property of the observation pipeline, not a quality
+      judgement. Hyperscaler list prices are posted alongside as a
+      <span class="mono">Reference</span> series but excluded from the
+      trimmed\u2011mean estimator. Per\u2011venue terms of service, scrape
+      cadence, and the latest eligibility review date are available on the
+      <a class="vlink" href="/venues">venues directory</a>.
+    </p>
+  </div>
+</section>

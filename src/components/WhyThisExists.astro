@@ -1,0 +1,44 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+/**
+ * § 03 · Why This Exists — three paragraphs of prose explaining the
+ * project's motivation: pricing opacity, the analogy to financial
+ * benchmarks, and the open-source / reproducibility commitment.
+ */
+---
+
+<section>
+  <div class="wrap">
+    <Eyebrow number="03" label="Why This Exists" />
+    <div class="prose">
+      <p>
+        The GPU rental market in 2026 looks the way the oil market looked in
+        the 1970s, before Platts began publishing Dated Brent: enormous,
+        economically consequential, and almost entirely opaque. A neocloud
+        CFO modelling next quarter's revenue, an analyst writing a sector
+        note, or a journalist reporting on AI capex has no shared reference
+        for what an H100\u2011hour costs today \u2014 only a thicket of
+        venue\u2011specific dashboards, sales\u2011team quotes, and
+        screenshots passed around in Slack.
+      </p>
+      <p>
+        GPU Markets is an attempt to fix that with the most boring possible
+        tool: a daily statistical release. Every weekday at 00:30 UTC we
+        publish a single number per series \u2014 the trimmed\u2011mean
+        rate across every venue we can observe, with the full input set,
+        the outliers we rejected, and the code that produced the fix all
+        committed to a public repository. The methodology is the product.
+        If you disagree with a fix, you can rerun it.
+      </p>
+      <p>
+        The point is not to compete with the venues, predict prices, or
+        recommend trades. It is to give the GPU economy the same kind of
+        public, auditable price reference that every other commodity market
+        already has \u2014 so that the conversations being had above this
+        market (capacity planning, hedging, journalism, policy) can rest
+        on a shared set of numbers instead of vibes.
+      </p>
+    </div>
+  </div>
+</section>

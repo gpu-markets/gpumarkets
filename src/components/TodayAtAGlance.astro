@@ -1,0 +1,42 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+/**
+ * Today at a Glance — 3-column data-callout strip for the most significant
+ * movements of the day. Data is passed in; in the static build this comes
+ * from a daily fixing JSON; eventually it comes from a content collection
+ * or build-time fetch.
+ */
+
+export interface GlanceItem {
+  label: string;
+  ticker: string;
+  big: string;
+  bigClass?: 'pos' | 'neg' | 'mute' | '';
+  sub: string;
+}
+
+export interface Props {
+  items: [GlanceItem, GlanceItem, GlanceItem];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="glance-section">
+  <div class="wrap">
+    <Eyebrow label="Today At A Glance" />
+    <div class="glance">
+      {
+        items.map((item) => (
+          <div class="glance-col">
+            <div class="glance-label">{item.label}</div>
+            <div class="glance-ticker">{item.ticker}</div>
+            <div class={`glance-big ${item.bigClass || ''}`}>{item.big}</div>
+            <div class="glance-sub">{item.sub}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

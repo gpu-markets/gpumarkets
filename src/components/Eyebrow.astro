@@ -1,0 +1,27 @@
+---
+/**
+ * Section eyebrow — the "§ 01 · LATEST FIXING" label that precedes every section.
+ */
+export interface Props {
+  number?: string; // "01", "02", or omit for sections without a number
+  label: string;
+  aside?: string; // right-side metadata like a date
+}
+
+const { number, label, aside } = Astro.props;
+---
+
+<div class="eyebrow-row">
+  <span class="num">§{number ? ` ${number}` : ''}</span>
+  <span class="dot">·</span>
+  <span class="label">{label}</span>
+  {
+    aside && (
+      <>
+        <span class="spacer"></span>
+        <span class="aside">{aside}</span>
+      </>
+    )
+  }
+</div>
+<div class="eyebrow-rule"></div>

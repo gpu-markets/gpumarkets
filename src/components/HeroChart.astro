@@ -1,0 +1,40 @@
+---
+/**
+ * HeroChart — the 180-day price chart below the training-tier table.
+ * This component renders ONLY the empty SVG scaffold with `data-*` hooks;
+ * the actual path data, gridlines, and labels are injected at runtime by
+ * /public/app.js, which reads from /public/chart-data.js and responds to
+ * chip-row clicks.
+ */
+---
+
+<div class="chart-block">
+  <div class="eyebrow-row chart-eyebrow">
+    <span class="num">§</span>
+    <span class="dot">·</span>
+    <span class="label" data-chart-title>H100 SXM Spot · 180 Days</span>
+    <span class="spacer"></span>
+    <span class="aside">USD / GPU-hour</span>
+  </div>
+  <div class="eyebrow-rule"></div>
+  <svg
+    id="hero-chart"
+    class="price-chart"
+    viewBox="0 0 1000 380"
+    preserveAspectRatio="none"
+    role="img"
+    aria-label="Price over the last 180 days"
+  >
+    <g class="gridlines" data-gridlines></g>
+    <g class="y-labels" data-ylabels></g>
+    <line class="axis" x1="54" x2="54" y1="18" y2="338" />
+    <line class="axis" x1="54" x2="908" y1="338" y2="338" />
+    <path class="area" data-area d="" />
+    <path class="line" data-line d="" />
+    <line class="today-line" data-today-line x1="54" x2="908" y1="0" y2="0" />
+    <text class="today-label" data-today-label x="912" y="0"></text>
+    <g class="annotations" data-annotations></g>
+    <g class="x-ticks" data-xticks></g>
+    <g class="x-labels" data-xlabels></g>
+  </svg>
+</div>

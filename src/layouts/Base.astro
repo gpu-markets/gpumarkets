@@ -1,0 +1,137 @@
+---
+/**
+ * Base layout — shared masthead, nav, footer, head across every page.
+ * Structure mirrors the standalone HTML 1:1.
+ */
+
+export interface Props {
+  title: string;
+  description?: string;
+  currentPage?: 'latest' | 'methodology' | 'data' | 'venues' | 'research';
+  issueNumber?: string;
+  releaseDate?: string;
+  releaseTimeTop?: string;
+  /** When true, include the interactive chart + row-toggle scripts */
+  withAppScripts?: boolean;
+}
+
+const {
+  title,
+  description = 'An open, reproducible price index and research toolkit for the GPU rental market.',
+  currentPage = 'latest',
+  issueNumber = '042',
+  releaseDate = '18 April 2026',
+  releaseTimeTop = '2026\u2011\u200404\u201118 · 00:30:00 UTC',
+  withAppScripts = false,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;0,8..60,800;0,8..60,900;1,8..60,400&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/shared.css" />
+    <slot name="head" />
+  </head>
+  <body>
+
+    <div class="strip">
+      <div class="wrap">
+        <span>GPU Markets · v0.1 · Fixing released daily at 00:30 UTC</span>
+        <span set:html={releaseTimeTop} />
+      </div>
+    </div>
+
+    <header class="wrap masthead" role="banner">
+      <div class="rule-heavy"></div>
+      <h1 class="mast-wordmark"><a href="/">GPU Markets</a></h1>
+      <div class="rule-heavy"></div>
+      <div class="mast-meta">
+        <span class="l">Vol. 1 · No. {issueNumber}</span>
+        <span class="c">Statistical Release · H.GPU</span>
+        <span class="r">{releaseDate}</span>
+      </div>
+      <div class="rule-heavy"></div>
+    </header>
+
+    <nav class="nav" aria-label="Primary">
+      <div class="wrap">
+        <a href="/" class={currentPage === 'latest' ? 'current' : ''}>Latest</a>
+        <span class="sep">·</span>
+        <a href="/methodology" class={currentPage === 'methodology' ? 'current' : ''}>Methodology</a>
+        <span class="sep">·</span>
+        <a href="/data" class={currentPage === 'data' ? 'current' : ''}>Data</a>
+        <span class="sep">·</span>
+        <a href="/venues" class={currentPage === 'venues' ? 'current' : ''}>Venues</a>
+        <span class="sep">·</span>
+        <a href="/research" class={currentPage === 'research' ? 'current' : ''}>Research</a>
+      </div>
+    </nav>
+
+    <article>
+      <slot />
+    </article>
+
+    <footer>
+      <div class="wrap">
+        <div class="cols">
+          <div>
+            <h4>Project</h4>
+            <ul>
+              <li><a href="https://github.com/gpu-markets/gpu-markets" rel="noopener">GitHub</a></li>
+              <li><a href="/methodology">Methodology</a></li>
+              <li><a href="/changelog">Changelog</a></li>
+              <li><a href="/roadmap">Roadmap</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Data</h4>
+            <ul>
+              <li><a href="/data">Latest fixing</a></li>
+              <li><a href="/data#historical">Historical CSV</a></li>
+              <li><a href="/data#parquet">Parquet archive</a></li>
+              <li><a href="/data#badges">Badges</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="/disclaimer">Disclaimer</a></li>
+              <li><a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">Data license (CC BY 4.0)</a></li>
+              <li><a href="https://www.apache.org/licenses/LICENSE-2.0" rel="noopener">Code license (Apache 2.0)</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <ul>
+              <li><a href="mailto:john@gpumarkets.dev">Contact</a></li>
+              <li><a href="https://github.com/gpu-markets" rel="noopener">GitHub</a></li>
+              <li><a href="https://x.com/gpumarkets" rel="noopener">X</a></li>
+              <li><a href="/feed.xml">RSS</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="bottom">
+          <span>© 2026 GPU Markets · Published under CC BY 4.0 · Not investment advice</span>
+          <span>gpumarkets.dev</span>
+        </div>
+      </div>
+    </footer>
+
+    {withAppScripts && (
+      <>
+        <script is:inline src="/chart-data.js"></script>
+        <script is:inline src="/app.js"></script>
+      </>
+    )}
+  </body>
+</html>

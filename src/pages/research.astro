@@ -1,0 +1,37 @@
+---
+/**
+ * Research — placeholder for the research index. Phase 2 will turn this
+ * into a paginated listing of MDX notes from a content collection, each
+ * with its own slug-based detail page.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="Research \u00B7 GPU Markets" currentPage="research">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Research</h1>
+      <p class="deck">
+        Notes on what the data is doing \u2014 spread analysis, forward
+        curves, residual\u2011value implications, and historical
+        backtests on GPU rental rates.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Coming In Phase 2" />
+      <div class="prose">
+        <p>
+          Individual research notes will be published here as MDX from a
+          content collection, with one URL per note. The current lead
+          note and the four most recent previous notes are summarised on
+          the landing page under
+          <a href="/#research">\u00A7 06 \u00B7 Research</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

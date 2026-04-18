@@ -1,0 +1,28 @@
+---
+import Eyebrow from './Eyebrow.astro';
+
+/**
+ * § 04 · Methodology — pull-quote summarising the trimmed-mean estimator,
+ * outlier rejection rule, and link out to the full methodology page.
+ */
+---
+
+<section>
+  <div class="wrap">
+    <Eyebrow number="04" label="Methodology" />
+    <blockquote class="pull">
+      <p>
+        Each daily fix is a 20% trimmed mean of every observed venue rate
+        for the series, with observations more than 2.5 median absolute
+        deviations from the cluster rejected as outliers. Reference clouds
+        (AWS, GCP, Azure) are reported alongside but excluded from the
+        estimator. No smoothing, no carry\u2011forward, no proprietary
+        adjustments \u2014 if a number is in the fix, you can find the
+        observation that produced it.
+      </p>
+      <p class="cite">
+        \u2014 <a href="/methodology">Read the full methodology</a>
+      </p>
+    </blockquote>
+  </div>
+</section>

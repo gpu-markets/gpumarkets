@@ -1,0 +1,18 @@
+---
+/**
+ * Hero — the main headline section on the landing page.
+ */
+export interface Props {
+  headline: string;
+  deck: string;
+}
+
+const { headline, deck } = Astro.props;
+---
+
+<section class="hero">
+  <div class="wrap">
+    <h1>{headline}</h1>
+    <p class="deck">{deck}</p>
+  </div>
+</section>

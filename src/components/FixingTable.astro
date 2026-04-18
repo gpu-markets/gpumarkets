@@ -1,0 +1,114 @@
+---
+import type { Series } from '../lib/types';
+
+/**
+ * Fixing table — renders one tier of series as a dense data table
+ * with expandable spec rows and sparklines. Matches the standalone
+ * HTML class names exactly so shared.css applies unchanged.
+ */
+
+export interface Props {
+  series: Series[];
+  ariaLabel: string;
+}
+
+const { series, ariaLabel } = Astro.props;
+
+function pctClass(v: number): 'pos' | 'neg' | 'zero' {
+  if (v > 0) return 'pos';
+  if (v < 0) return 'neg';
+  return 'zero';
+}
+function pctSign(v: number): string {
+  if (v > 0) return '+';
+  if (v < 0) return '\u2212';
+  return '\u00A0';
+}
+function pctValue(v: number): string {
+  return Math.abs(v).toFixed(2) + '%';
+}
+function slugify(ticker: string): string {
+  // GPUM.H100.SXM.SPOT -> h100-sxm-spot
+  return ticker.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-');
+}
+---
+
+<div class="table-scroll">
+  <table class="fixing" aria-label={ariaLabel}>
+    <thead>
+      <tr>
+        <th scope="col">Series</th>
+        <th scope="col" class="num">Today</th>
+        <th scope="col" class="num">Δ 1d</th>
+        <th scope="col" class="num">Δ 7d</th>
+        <th scope="col" class="num">Δ 30d</th>
+        <th scope="col" class="num">Obs</th>
+        <th scope="col" class="num">Venues</th>
+        <th scope="col" class="num">30d</th>
+      </tr>
+    </thead>
+    <tbody>
+      {
+        series.map((s) => {
+          const slug = slugify(s.id);
+          const specId = `spec-${slug}`;
+          return (
+            <>
+              <tr class="chip-row" data-series={s.id} tabindex="0">
+                <td class="series">
+                  <button
+                    class="row-toggle"
+                    aria-expanded="false"
+                    aria-controls={specId}
+                    type="button"
+                  >
+                    <span class="chev">›</span>
+                    <span class="name">
+                      {s.chipName} · <span class="vram">{s.vram}</span> · {s.tenor}
+                    </span>
+                    <span class="tick">{s.id}</span>
+                  </button>
+                </td>
+                <td class="num">${s.price.toFixed(4)}</td>
+                <td class={`num pct ${pctClass(s.delta1d)}`}>
+                  <span class="sign">{pctSign(s.delta1d)}</span>{pctValue(s.delta1d)}
+                </td>
+                <td class={`num pct ${pctClass(s.delta7d)}`}>
+                  <span class="sign">{pctSign(s.delta7d)}</span>{pctValue(s.delta7d)}
+                </td>
+                <td class={`num pct ${pctClass(s.delta30d)}`}>
+                  <span class="sign">{pctSign(s.delta30d)}</span>{pctValue(s.delta30d)}
+                </td>
+                <td class="num">{s.obs.toLocaleString('en-US')}</td>
+                <td class="num">{s.venueCount}</td>
+                <td class="num">
+                  <svg
+                    class="spark"
+                    width="80"
+                    height="18"
+                    viewBox="0 0 80 18"
+                    aria-hidden="true"
+                  >
+                    <path d={s.sparkPath} />
+                  </svg>
+                </td>
+              </tr>
+              <tr class="spec-row" id={specId} hidden>
+                <td colspan="8">
+                  <dl class="specs">
+                    {s.specs.map(([k, v]) => (
+                      <div>
+                        <dt>{k}</dt>
+                        <dd>{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </td>
+              </tr>
+            </>
+          );
+        })
+      }
+    </tbody>
+  </table>
+</div>
