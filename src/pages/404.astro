@@ -1,0 +1,42 @@
+---
+/**
+ * 404 — page not found. Astro emits this as dist/404.html and Cloudflare
+ * Pages serves it for any unmatched route, with the same look-and-feel as
+ * the Phase 2 stub pages.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="404 · GPU Markets">
+  <section class="hero">
+    <div class="wrap">
+      <h1>404</h1>
+      <p class="deck">
+        That page doesn’t exist — or hasn’t been published yet.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Where To Go Next" />
+      <div class="prose">
+        <p>
+          The most common destinations:
+          <a href="/">latest fixing</a>,
+          <a href="/methodology">methodology</a>,
+          <a href="/data">data downloads</a>,
+          <a href="/venues">venues</a>, and
+          <a href="/research">research</a>.
+        </p>
+        <p>
+          If you followed a link from outside the site and think this is a
+          mistake, please
+          <a href="mailto:john@gpumarkets.dev">let me know</a> so I can
+          fix it.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
