@@ -32,6 +32,20 @@ export interface Series {
   yMax?: number;
   /** Chart label e.g. "H100 SXM Spot" */
   label?: string;
+
+  /**
+   * Capacity-weighted companion fix (.cw research series). Weighted median
+   * across eligible venues using 3:2:1 tier weights (T1 >10k GPUs, T2
+   * 1k–10k, T3 <1k). Absent when the min-sample guard suppresses the fix
+   * — in that case `suppressedCW` carries the reason.
+   */
+  priceCW?: number;
+  /** Percentage delta of `priceCW` vs headline `price` — e.g. +1.23 for +1.23%. */
+  deltaCWvsFix?: number;
+  /** Tier distribution of surviving observations, e.g. "2 T1 · 4 T2 · 3 T3". */
+  venueTierBreakdown?: string;
+  /** Reason the CW fix is suppressed today (min-sample guard). */
+  suppressedCW?: string;
 }
 
 export interface Venue {

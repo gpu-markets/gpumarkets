@@ -1,0 +1,66 @@
+---
+import type { Series } from '../lib/types';
+
+/**
+ * Capacity-weighted companion row (.cw research series). Rendered
+ * inline by FixingTable beneath a chip-row when the series has a
+ * `priceCW` (or a `suppressedCW` reason). The row shows the weighted-
+ * median fix, its delta vs the headline fix, and the tier distribution
+ * of surviving observations. Suppressed state is rendered as a single
+ * muted line so the table cadence stays even.
+ *
+ * No new CSS: reuses `mono`, `pct`, `pos`/`neg`/`zero`, `sign`, `mute`
+ * from shared.css. Span structure mirrors spec-row (single colspan=8 td).
+ */
+
+export interface Props {
+  series: Series;
+}
+
+const { series } = Astro.props;
+
+const hasCW =
+  typeof series.priceCW === 'number' &&
+  typeof series.deltaCWvsFix === 'number';
+const suppressed = series.suppressedCW;
+const show = hasCW || !!suppressed;
+
+function pctClass(v: number): 'pos' | 'neg' | 'zero' {
+  if (v > 0) return 'pos';
+  if (v < 0) return 'neg';
+  return 'zero';
+}
+function pctSign(v: number): string {
+  if (v > 0) return '+';
+  if (v < 0) return '−';
+  return '\u00A0';
+}
+---
+
+{show && (
+  <tr class="cw-row" aria-label={`${series.id} capacity-weighted companion`}>
+    <td colspan="8">
+      <span class="mono mute">cw</span>
+      {' · '}
+      {hasCW ? (
+        <>
+          <span class="mono">${series.priceCW!.toFixed(4)}</span>
+          {' · '}
+          <span class={`pct ${pctClass(series.deltaCWvsFix!)}`}>
+            <span class="sign">{pctSign(series.deltaCWvsFix!)}</span>
+            {Math.abs(series.deltaCWvsFix!).toFixed(2)}%
+          </span>
+          <span class="mute">{' vs fix'}</span>
+          {series.venueTierBreakdown && (
+            <>
+              {'\u2003'}
+              <span class="mute mono">{series.venueTierBreakdown}</span>
+            </>
+          )}
+        </>
+      ) : (
+        <span class="mute">suppressed · {suppressed}</span>
+      )}
+    </td>
+  </tr>
+)}

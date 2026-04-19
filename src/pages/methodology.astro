@@ -39,4 +39,41 @@ import Eyebrow from '../components/Eyebrow.astro';
       </div>
     </div>
   </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Research series · capacity-weighted companion" />
+      <div class="prose">
+        <p>
+          Alongside the headline fix, each training-tier series publishes a
+          capacity-weighted companion — <span class="mono">.cw</span> — as
+          a research series. The companion is a weighted median of the same
+          surviving observations, with weights assigned by venue capacity
+          tier: 3 for T1 venues (over 10,000 GPUs), 2 for T2 (1,000–10,000),
+          1 for T3 (under 1,000). Tier assignments are coarse by design —
+          disagreement over whether a venue operates 8,000 or 12,000 GPUs
+          does not change a tier, so weights do not depend on privately
+          estimated capacities. The current assignment, with a per-venue
+          citation, is published as <code>data/venue-capacity.json</code> in
+          the <a href="https://github.com/gpu-markets/gpu-markets" rel="noopener">project repository</a>.
+          Tiers are reviewed quarterly and reassignments are logged
+          alongside MAD threshold changes in the methodology changelog.
+        </p>
+        <p>
+          The <span class="mono">.cw</span> fix is suppressed when fewer
+          than two venues survive outlier rejection or when surviving
+          venues span fewer than two capacity tiers. On suppressed days the
+          row carries a reason in place of a price; the headline fix is not
+          substituted as a fallback.
+        </p>
+        <p>
+          The headline fix remains the equal-weight median. The
+          <span class="mono">.cw</span> series is a research publication,
+          not a member of the fix family — its purpose is to offer an
+          auditable supply-weighted reference without introducing weighting
+          into the headline benchmark.
+        </p>
+      </div>
+    </div>
+  </section>
 </Base>

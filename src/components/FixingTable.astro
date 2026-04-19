@@ -1,5 +1,6 @@
 ---
 import type { Series } from '../lib/types';
+import CapacityWeightedRow from './CapacityWeightedRow.astro';
 
 /**
  * Fixing table — renders one tier of series as a dense data table
@@ -93,6 +94,7 @@ function slugify(ticker: string): string {
                   </svg>
                 </td>
               </tr>
+              <CapacityWeightedRow series={s} />
               <tr class="spec-row" id={specId} hidden>
                 <td colspan="8">
                   <dl class="specs">
