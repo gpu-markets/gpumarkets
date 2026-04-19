@@ -18,11 +18,12 @@ import type { ResearchNote } from './types';
 export const leadNote: ResearchNote = {
   slug: 'b200-curve-decomposition',
   date: '2026\u201104\u201111',
-  title: 'Decomposing the B200 curve \u2014 scarcity or generation?',
+  title: 'Decomposing the B200 curve \u2014 where did the demand go?',
   deck:
-    "The B200 SXM spot series has fallen 11.6% over the last 30 days, its steepest drop since launch. " +
-    "A log\u2011linear decomposition against supply announcements and CoreWeave's reported order book " +
-    "suggests demand\u2011side exhaustion, not generational obsolescence. Charts and data below.",
+    "Listed B200 SXM spot on open neocloud venues has fallen 11.6% over 30 days (28% over six months) " +
+    "\u2014 even as SemiAnalysis's survey\u2011based contract index reports H100 1\u2011year rates up ~38% " +
+    "and on\u2011demand capacity sold out. A log\u2011linear decomposition against CoreWeave's order book " +
+    "reads the move as demand absorbed into contracts, not generational obsolescence. Charts and data below.",
   isLead: true,
 };
 

@@ -32,14 +32,26 @@ import { leadNote } from '../../lib/research-notes';
       <Eyebrow label={`Research Note · ${leadNote.date}`} />
       <div class="prose">
         <p>
-          Between mid‑March and mid‑April, the B200 SXM spot series
+          Between mid‑March and mid‑April, the <strong>listed</strong>
+          B200 SXM spot series
           (<span class="mono">GPUM.B200.SXM.SPOT</span>) fell from roughly
-          $6.66 to $5.88 per GPU‑hour — an 11.6% decline over 30 days.
-          It is the steepest monthly drop since the series became broad
-          enough for a daily fix to be published.
+          $6.66 to $5.88 per GPU‑hour — an 11.6% decline over 30 days,
+          extending a 28% decline over six months. It is the steepest
+          monthly drop since the series became broad enough for a daily
+          fix to be published.
         </p>
         <p>
-          Two explanations fit the observation equally well on the surface:
+          The move is, at first reading, puzzling. Over the same six‑month
+          window, SemiAnalysis's survey‑based contract index reports H100
+          1‑year rates up roughly 38% and on‑demand capacity
+          "sold out across all GPU types." Listed neocloud spot and
+          surveyed contract transaction rates have detached. Any
+          decomposition of the listed‑side decline therefore has to
+          reconcile against the contract‑side move, not just against
+          supply fundamentals.
+        </p>
+        <p>
+          Three explanations fit the observation on the surface:
         </p>
         <ol>
           <li>
@@ -51,22 +63,36 @@ import { leadNote } from '../../lib/research-notes';
             H100 from scarcity to clearing price over 2024–2025.
           </li>
           <li>
-            <strong>Demand-side.</strong> Aggregate demand for B200
-            training capacity softened over the last 30 days — fewer new
-            contract adds at the biggest operators, more capacity
-            unspoken-for at the margin, rental rates fall to clear. Under
-            this reading, B200's decline says nothing about Blackwell's
-            competitive lifespan. It is a demand signal, not a product
-            signal.
+            <strong>Demand-side exhaustion.</strong> Aggregate demand
+            for B200 training capacity softened over the last 30 days —
+            fewer new contract adds at the biggest operators, more
+            capacity unspoken‑for at the margin, rental rates fall to
+            clear. Under this reading, B200's decline says nothing
+            about Blackwell's competitive lifespan. It is a demand
+            signal, not a product signal.
+          </li>
+          <li>
+            <strong>Demand-side absorption.</strong> Aggregate demand
+            for B200 has not softened; rather, it has migrated from
+            the listed side of the market into long‑tenor contracts.
+            Tight supply gets allocated to the highest‑conviction
+            buyers first, those buyers lock capacity for one or two
+            years, and list‑facing inventory softens because the
+            marginal GPU‑hour now clears out of sight of the public
+            APIs. Under this reading, B200's decline on
+            <code>gpumarkets.dev</code> is a <em>structural</em>
+            signal about where price discovery sits, not a
+            <em>fundamental</em> signal about chip demand.
           </li>
         </ol>
         <p>
-          The two explanations predict very different futures. If the
-          driver is supply, B200 prices stabilise as allocations normalise
-          and stay at the lower level. If the driver is demand, B200
-          prices track demand — which can recover — and the decline
-          carries no information about the chip's merit relative to
-          successor silicon.
+          The three explanations predict very different futures. If
+          the driver is supply, both listed and contract rates stabilise
+          at lower levels. If the driver is exhaustion, both listed and
+          contract rates fall together. If the driver is absorption,
+          listed rates fall while contract rates rise — which is
+          precisely what has been observed over the six‑month window
+          across both indices.
         </p>
       </div>
     </div>
@@ -120,9 +146,9 @@ import { leadNote } from '../../lib/research-notes';
           contributes less than a tenth of the observed price drop.
         </p>
         <p>
-          Several corroborating signals are consistent with that
-          attribution and difficult to reconcile with the supply
-          hypothesis:
+          Several corroborating signals are consistent with a
+          demand‑side attribution and difficult to reconcile with the
+          supply hypothesis:
         </p>
         <ul>
           <li>
@@ -149,17 +175,45 @@ import { leadNote } from '../../lib/research-notes';
             new contract adds moving from roughly double-digit
             quarter-over-quarter expansion to a flatter trajectory. That
             is the single largest input to γ's drop in the regression.
-            It is also consistent with public commentary from the largest
-            AI labs, where training-run announcements per unit time have
-            thinned and several frontier programs have deferred expansion
-            decisions into the second half.
           </li>
         </ul>
         <p>
-          Taken together: the decomposition, the absence of a supply
-          surprise, and the shape of CoreWeave's order book all point in
-          the same direction. The 30-day B200 decline is priced as a
-          demand signal.
+          The supply hypothesis is therefore rejected. The remaining
+          question is which demand hypothesis holds: exhaustion
+          (demand is falling) or absorption (demand is migrating into
+          contracts). That question is answered from outside the
+          regression, by the contract‑side surface:
+        </p>
+        <ul>
+          <li>
+            <strong>Contract-side rates are rising, not falling.</strong>
+            SemiAnalysis's H100 1‑year contract index went from
+            ~$1.70/hr in October 2025 to ~$2.35/hr by March 2026 — up
+            roughly 38% over the same window in which listed spot fell
+            28%. On‑demand availability at the largest surveyed
+            operators is described as "sold out across all GPU types."
+            Under the exhaustion hypothesis, contract rates should
+            fall in sympathy with spot. They have done the opposite.
+          </li>
+          <li>
+            <strong>Forward-capacity announcements are being
+            absorbed, not cancelled.</strong>
+            Market‑wide capacity coming online through August–September
+            2026 is reported as already booked. That is incompatible
+            with exhaustion: exhausting demand does not pre‑book
+            unbuilt capacity. It is consistent with absorption: the
+            highest‑conviction buyers are locking capacity at the
+            expense of spot‑facing inventory.
+          </li>
+        </ul>
+        <p>
+          Taken together: the decomposition rules out supply; the
+          contract‑side surface rules out exhaustion; what remains is
+          demand‑side <em>absorption</em>. Price discovery for B200 has
+          migrated from the listed side of the market into long‑tenor
+          contracts. The 11.6% listed decline is priced as a structural
+          signal about where that price discovery sits, not as a
+          fundamental signal about waning demand.
         </p>
       </div>
     </div>
@@ -170,22 +224,32 @@ import { leadNote } from '../../lib/research-notes';
       <Eyebrow label="Conclusion · a testable prediction" />
       <div class="prose">
         <p>
-          The B200 curve's 11.6% decline is a demand signal, not a supply
-          glut and not a generational judgment on Blackwell. Our reading
-          produces a testable implication: if CoreWeave's order-book
-          dollar volume (or an analogous order-book signal from another
-          large operator) reverses in the next two quarters, B200 spot
-          rates should track the reversal within days, and the price path
-          should closely mirror γ's recovery. If the demand proxy
-          continues to flatten and B200 rates continue to fall, the
-          decomposition stays intact and the demand-exhaustion reading is
-          confirmed.
+          The B200 curve's 11.6% listed decline is a demand‑absorption
+          signal. It is not a supply glut, it is not waning demand,
+          and it is not a generational judgment on Blackwell. It is a
+          signal about <em>where</em> the market is pricing, not
+          <em>what</em> the market is pricing.
         </p>
         <p>
-          Either outcome is informative. Neither of them supports the
-          reading that B200 is being priced as a generational downgrade.
-          It is being priced as a chip whose customer base is resizing in
-          real time.
+          The absorption reading produces a testable
+          implication in the contract‑listed spread. If contract‑side
+          rates (tracked by SemiAnalysis's H100 1‑year index and by
+          surveyed neocloud contract adds) continue to rise while
+          listed rates continue to fall, absorption is confirmed and
+          the listed‑minus‑transacted spread should widen further. If
+          contract rates reverse downward alongside listed rates, the
+          market has shifted from absorption to genuine demand
+          exhaustion, and both surfaces should decline together. If
+          contract rates stall while listed rates stabilise, price
+          discovery has re‑aligned between the two surfaces — the
+          spread closes from above rather than widening.
+        </p>
+        <p>
+          Each of the three paths is informative. None of them is
+          consistent with reading B200 as a generational downgrade.
+          The chip's rental curve is being set by where its buyers
+          choose to transact — and right now they are choosing
+          contracts.
         </p>
       </div>
     </div>

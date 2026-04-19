@@ -21,6 +21,35 @@ import Eyebrow from '../components/Eyebrow.astro';
 
   <section>
     <div class="wrap">
+      <Eyebrow label="What the fix measures" />
+      <div class="prose">
+        <p>
+          GPU Markets is an index of the <strong>listed</strong> GPU rental
+          rate on public venue APIs. Each daily fix is a median of the
+          rates venues are publicly advertising at 00:30 UTC. That is what
+          a buyer sees when they price capacity on the open marketplace.
+        </p>
+        <p>
+          The fix does <strong>not</strong> measure negotiated contract
+          rates, private enterprise agreements, auction clears, or any
+          transacted price not visible on a public API. Those belong to
+          the transacted surface of the market; survey‑based indices —
+          most notably SemiAnalysis's H100 1‑year contract series —
+          capture that side. The two surfaces can and do diverge.
+        </p>
+        <p>
+          Every claim in the research notes, the fixings table, and the
+          news section is a claim about listed advertised rates. Readers
+          cross‑referencing against contract‑side data should expect
+          numerical differences and should not interpret them as error
+          in either surface.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
       <Eyebrow label="Status" />
       <div class="prose">
         <p>
