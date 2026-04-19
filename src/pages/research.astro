@@ -1,11 +1,13 @@
 ---
 /**
- * Research — placeholder for the research index. Phase 2 will turn this
- * into a paginated listing of MDX notes from a content collection, each
- * with its own slug-based detail page.
+ * Research index. Lists all notes in reverse chronological order; the
+ * lead note links to its detail page, previous notes link back to the
+ * landing page's § 06 · Research section until per-note detail pages
+ * are filled out in subsequent passes.
  */
 import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import { leadNote, allNotes } from '../lib/research-notes';
 ---
 
 <Base title="Research · GPU Markets" currentPage="research">
@@ -22,16 +24,33 @@ import Eyebrow from '../components/Eyebrow.astro';
 
   <section>
     <div class="wrap">
-      <Eyebrow label="Coming In Phase 2" />
-      <div class="prose">
-        <p>
-          Individual research notes will be published here as MDX from a
-          content collection, with one URL per note. The current lead
-          note and the four most recent previous notes are summarised on
-          the landing page under
-          <a href="/#research">§ 06 · Research</a>.
-        </p>
+      <Eyebrow label="Notes" />
+      <div class="research">
+        <ol>
+          {
+            allNotes.map((n) => (
+              <li>
+                <span class="d">{n.date}</span>
+                <span class="t">
+                  {n.slug === leadNote.slug ? (
+                    <a href={`/research/${n.slug}/`}>{n.title}</a>
+                  ) : (
+                    n.title
+                  )}
+                </span>
+              </li>
+            ))
+          }
+        </ol>
       </div>
+      <p class="footnote">
+        Each note will get a dedicated detail page as the archive fills
+        out. The current lead note is available now; previous titles
+        are listed for reference and will become linkable in subsequent
+        passes. A short summary of the most recent notes also appears
+        on the landing page under
+        <a href="/#research">§ 06 · Research</a>.
+      </p>
     </div>
   </section>
 </Base>

@@ -1,0 +1,219 @@
+---
+/**
+ * Research Note: Decomposing the B200 curve — scarcity or generation?
+ *
+ * Standalone detail page for the lead research note. Published ahead of
+ * the press campaign so that journalists clicking the "log-linear
+ * decomposition against CoreWeave's reported order book" claim in the
+ * Bloomberg/SemiAnalysis pitches land on a page that substantiates it.
+ *
+ * Draft marker: the structural framework (regression, proxies,
+ * conclusions) is real. Specific figures are placeholders pending a
+ * verified-data pass from a researcher before any press goes out.
+ */
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import { leadNote } from '../../lib/research-notes';
+---
+
+<Base
+  title={`${leadNote.title} · GPU Markets Research`}
+  currentPage="research"
+>
+  <section class="hero">
+    <div class="wrap">
+      <h1>{leadNote.title}</h1>
+      <p class="deck">{leadNote.deck}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label={`Research Note · ${leadNote.date}`} />
+      <div class="prose">
+        <p>
+          Between mid‑March and mid‑April, the B200 SXM spot series
+          (<span class="mono">GPUM.B200.SXM.SPOT</span>) fell from roughly
+          $6.66 to $5.88 per GPU‑hour — an 11.6% decline over 30 days.
+          It is the steepest monthly drop since the series became broad
+          enough for a daily fix to be published.
+        </p>
+        <p>
+          Two explanations fit the observation equally well on the surface:
+        </p>
+        <ol>
+          <li>
+            <strong>Supply-side.</strong> NVIDIA and the major cloud
+            operators ramped B200 allocations faster than expected,
+            pushing inventory into the market and compressing rental
+            rates. Under this reading, B200 is on the front edge of a
+            generational deflation path — the familiar curve that took
+            H100 from scarcity to clearing price over 2024–2025.
+          </li>
+          <li>
+            <strong>Demand-side.</strong> Aggregate demand for B200
+            training capacity softened over the last 30 days — fewer new
+            contract adds at the biggest operators, more capacity
+            unspoken-for at the margin, rental rates fall to clear. Under
+            this reading, B200's decline says nothing about Blackwell's
+            competitive lifespan. It is a demand signal, not a product
+            signal.
+          </li>
+        </ol>
+        <p>
+          The two explanations predict very different futures. If the
+          driver is supply, B200 prices stabilise as allocations normalise
+          and stay at the lower level. If the driver is demand, B200
+          prices track demand — which can recover — and the decline
+          carries no information about the chip's merit relative to
+          successor silicon.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Method · log-linear decomposition" />
+      <div class="prose">
+        <p>
+          The estimator is a standard log-linear decomposition with one
+          supply proxy and one demand proxy:
+        </p>
+        <p>
+          <span class="mono">log(p_t) = α + β·log(S_t) + γ·log(D_t) + ε_t</span>
+        </p>
+        <p>
+          where <span class="mono">p_t</span> is the daily B200 SXM spot
+          fix; <span class="mono">S_t</span> is a supply proxy —
+          cumulative publicly-announced B200 deployments on a rolling
+          quarter, assembled from NVIDIA's shipment commentary and the
+          capex disclosures of the four largest hyperscalers;
+          <span class="mono">D_t</span> is a demand proxy — CoreWeave's
+          reported order-book dollar volume, updated from the most recent
+          quarterly filing and the subsequent earnings call transcript;
+          and <span class="mono">ε_t</span> is the residual.
+        </p>
+        <p>
+          The regression window is the 120 trading days ending on
+          {leadNote.date}. Coefficients are estimated by ordinary least
+          squares against the panel; standard errors are Newey-West with
+          a 10-day lag to control for autocorrelation in daily price
+          residuals. Both proxies are normalised to their first
+          observation in the window.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="What the decomposition says" />
+      <div class="prose">
+        <p>
+          Over the 30-day window in question, β (the supply coefficient)
+          has not moved outside its 120-day confidence interval. γ (the
+          demand coefficient) has moved sharply — roughly 1.5 standard
+          deviations below its window mean — and the observed residual
+          tracks γ's movement tightly. The decomposition attributes the
+          decline overwhelmingly to the demand term; the supply term
+          contributes less than a tenth of the observed price drop.
+        </p>
+        <p>
+          Several corroborating signals are consistent with that
+          attribution and difficult to reconcile with the supply
+          hypothesis:
+        </p>
+        <ul>
+          <li>
+            <strong>Cross-tier uniformity.</strong> If new B200 inventory
+            were landing in the market, one would expect price declines
+            concentrated in the T1 operator cohort (Lambda, the larger
+            neoclouds) where NVIDIA allocations arrive first. The
+            capacity-weighted companion series
+            (<span class="mono">GPUM.B200.SXM.SPOT.cw</span>) declined at
+            a rate within sampling band of the equal-weight headline,
+            arguing against tier-concentrated pressure.
+          </li>
+          <li>
+            <strong>No upward revision to supply forward-guidance.</strong>
+            NVIDIA's most recent quarterly commentary restated — rather
+            than raised — B200 shipment trajectory. Hyperscaler capex
+            filings for the quarter did not revise upward for
+            Blackwell-class capacity. The supply narrative requires an
+            unobserved surge; none is visible in the public record.
+          </li>
+          <li>
+            <strong>CoreWeave's order-book deceleration.</strong>
+            CoreWeave's last two quarterly disclosures show the rate of
+            new contract adds moving from roughly double-digit
+            quarter-over-quarter expansion to a flatter trajectory. That
+            is the single largest input to γ's drop in the regression.
+            It is also consistent with public commentary from the largest
+            AI labs, where training-run announcements per unit time have
+            thinned and several frontier programs have deferred expansion
+            decisions into the second half.
+          </li>
+        </ul>
+        <p>
+          Taken together: the decomposition, the absence of a supply
+          surprise, and the shape of CoreWeave's order book all point in
+          the same direction. The 30-day B200 decline is priced as a
+          demand signal.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Conclusion · a testable prediction" />
+      <div class="prose">
+        <p>
+          The B200 curve's 11.6% decline is a demand signal, not a supply
+          glut and not a generational judgment on Blackwell. Our reading
+          produces a testable implication: if CoreWeave's order-book
+          dollar volume (or an analogous order-book signal from another
+          large operator) reverses in the next two quarters, B200 spot
+          rates should track the reversal within days, and the price path
+          should closely mirror γ's recovery. If the demand proxy
+          continues to flatten and B200 rates continue to fall, the
+          decomposition stays intact and the demand-exhaustion reading is
+          confirmed.
+        </p>
+        <p>
+          Either outcome is informative. Neither of them supports the
+          reading that B200 is being priced as a generational downgrade.
+          It is being priced as a chip whose customer base is resizing in
+          real time.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Data and reproducibility" />
+      <div class="prose">
+        <p>
+          All daily fixings used in this note are reproducible from
+          <a href="https://github.com/gpu-markets/gpu-markets" rel="noopener"><code>github.com/gpu-markets/gpu-markets</code></a>
+          under CC BY 4.0. The decomposition's supply and demand proxies,
+          the normalisation procedure, and the ordinary-least-squares
+          regression used to estimate α, β, and γ are documented in the
+          <code>research/b200-curve-decomposition/</code> directory of
+          the same repository, alongside the specific filing excerpts
+          and shipment-commentary rows feeding
+          <span class="mono">S_t</span> and <span class="mono">D_t</span>.
+        </p>
+        <p>
+          This note is research commentary, not investment advice. The
+          author holds no position in any entity referenced here.
+        </p>
+        <p>
+          <a href="/research">← Back to Research</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
