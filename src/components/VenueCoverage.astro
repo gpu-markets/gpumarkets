@@ -22,23 +22,23 @@ interface VenueRow {
 }
 
 const rows: VenueRow[] = [
-  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201114' },
-  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',                                                     access: 'GraphQL API',           status: 'yes',   firstObs: '2026\u201102\u201114' },
-  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud',                                            access: 'HTML',                  status: 'yes',   firstObs: '2026\u201102\u201114' },
-  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',                                                      access: 'HTML + CLI',            status: 'yes',   firstObs: '2026\u201102\u201117' },
-  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201117' },
-  { name: 'TensorDock',      url: 'https://www.tensordock.com/',                                                         access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201118' },
-  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                                                              access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201118' },
-  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                                                             access: 'REST API',              status: 'yes',   firstObs: '2026\u201102\u201121' },
-  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',                                                           access: 'Aggregator',            status: 'cross', firstObs: '2026\u201102\u201121' },
-  { name: 'AWS (p5 family)', url: 'https://aws.amazon.com/ec2/instance-types/p5/',                                       access: 'Official Pricing API',  status: 'ref',   firstObs: '2026\u201102\u201114' },
-  { name: 'GCP (A3 family)', url: 'https://cloud.google.com/compute/docs/accelerator-optimized-machines',                access: 'Cloud Billing API',     status: 'ref',   firstObs: '2026\u201102\u201114' },
-  { name: 'Azure (ND v5)',   url: 'https://learn.microsoft.com/en-us/azure/virtual-machines/nd-h100-v5-series',          access: 'Retail Prices API',     status: 'ref',   firstObs: '2026\u201102\u201114' },
+  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑14' },
+  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',                                                     access: 'GraphQL API',           status: 'yes',   firstObs: '2026‑02‑14' },
+  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud',                                            access: 'HTML',                  status: 'yes',   firstObs: '2026‑02‑14' },
+  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',                                                      access: 'HTML + CLI',            status: 'yes',   firstObs: '2026‑02‑17' },
+  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑17' },
+  { name: 'TensorDock',      url: 'https://www.tensordock.com/',                                                         access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18' },
+  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                                                              access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18' },
+  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                                                             access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑21' },
+  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',                                                           access: 'Aggregator',            status: 'cross', firstObs: '2026‑02‑21' },
+  { name: 'AWS (p5 family)', url: 'https://aws.amazon.com/ec2/instance-types/p5/',                                       access: 'Official Pricing API',  status: 'ref',   firstObs: '2026‑02‑14' },
+  { name: 'GCP (A3 family)', url: 'https://cloud.google.com/compute/docs/accelerator-optimized-machines',                access: 'Cloud Billing API',     status: 'ref',   firstObs: '2026‑02‑14' },
+  { name: 'Azure (ND v5)',   url: 'https://learn.microsoft.com/en-us/azure/virtual-machines/nd-h100-v5-series',          access: 'Retail Prices API',     status: 'ref',   firstObs: '2026‑02‑14' },
 ];
 
 const tagLabel: Record<VenueStatus, string> = {
   yes: 'Yes',
-  cross: 'Cross\u2011check',
+  cross: 'Cross‑check',
   ref: 'Reference',
 };
 ---
@@ -78,7 +78,7 @@ const tagLabel: Record<VenueStatus, string> = {
       Eligibility is a property of the observation pipeline, not a quality
       judgement. Hyperscaler list prices are posted alongside as a
       <span class="mono">Reference</span> series but excluded from the
-      trimmed\u2011mean estimator. Per\u2011venue terms of service, scrape
+      trimmed‑mean estimator. Per‑venue terms of service, scrape
       cadence, and the latest eligibility review date are available on the
       <a class="vlink" href="/venues">venues directory</a>.
     </p>
