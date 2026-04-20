@@ -87,18 +87,23 @@ Cloudflare Pages, building from `main`:
 | Node version | 20.x |
 | Custom domain | `gpumarkets.dev` |
 
-There is no CI/CD beyond Cloudflare's auto-deploy on push to `main` for Phase 1.
+CI (`.github/workflows/ci.yml`) runs `npm run check` (Astro check + TypeScript) and `npm run build` on every pull request and every push to `main`. Cloudflare Pages auto-deploys successful builds on `main`.
 
 ## Phase 2 roadmap
 
-Once Phase 1 ships, the next milestones are:
+Shipped in Phase 1 and the launch-marketing pass:
+
+- `/feed.xml` — RSS 2.0 for research notes.
+- `/news.xml` — RSS 2.0 for the news section (market events + press coverage).
+- `/research/b200-curve-decomposition/` — standalone research note detail page.
+
+Still open:
 
 - Astro content collections (`src/content/config.ts`) for series, venues, and research notes, with Zod schemas matched to `src/lib/types.ts`.
 - Dynamic route `src/pages/series/[slug].astro` generating one detail page per series (13 pages).
 - Dynamic route `src/pages/venues/[slug].astro` for venue detail pages (12 pages).
 - MDX support for research notes, with one URL per note.
 - GitHub Actions workflow that rebuilds the site whenever the `gpu-markets/gpu-markets` data repo publishes a new fix.
-- RSS feed at `/feed.xml`.
 
 ## Licenses
 
