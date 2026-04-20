@@ -10,28 +10,31 @@
  * `press` (third-party coverage) — so rendering branches can stay
  * exhaustive. See src/lib/types.ts for the type definitions.
  *
- * Ordering: position [0] is the curated landing-page lead, chosen for
- * editorial relevance rather than strict chronology. Positions [1]+ are
- * reverse-chronological. Dates use non-breaking hyphens (U+2011) to
- * match the convention used across the rest of the site.
+ * Ordering: strict reverse-chronological by `date`. The first element is
+ * always the most-recently-dated item — never a curator's pick. This
+ * matches financial-publication convention (Fed H.15, Platts, Bloomberg
+ * news feed) and the data-feed contract a journalist expects on /news.
+ * Ties on date are broken by slug alphabetical.
+ *
+ * Dates use non-breaking hyphens (U+2011) to match the convention used
+ * across the rest of the site (research notes, fixing tables, masthead).
  */
 import type { NewsItem } from './types';
 
 export const allNews: NewsItem[] = [
   {
-    kind: 'press',
-    slug: 'meta-coreweave-21b-0409',
-    date: '2026\u201104\u201109',
-    title: 'Meta commits additional $21B to CoreWeave through 2032 for Vera Rubin inference',
+    kind: 'market',
+    slug: 'cross-index-semianalysis-0419',
+    date: '2026\u201104\u201119',
+    title: "SemiAnalysis H100 1Y contract series now cited as external validation signal",
     deck:
-      "Per 8\u2011K filing on April 9: Meta's second major commitment to " +
-      'CoreWeave, running 2027\u20112032, structured for inference workloads ' +
-      "on NVIDIA's Vera Rubin platform across multiple sites. Brings " +
-      'combined Meta+CoreWeave commitments to roughly $35B \u2014 a real\u2011' +
-      'world instance of demand being absorbed into long\u2011tenor ' +
-      'contracts while listed\u2011side spot compresses.',
-    source: 'TNW',
-    sourceUrl: 'https://thenextweb.com/news/meta-coreweave-21-billion-ai-cloud-deal',
+      "The lead research note at /research/b200\u2011curve\u2011decomposition/ " +
+      "now references SemiAnalysis's contract\u2011side index to discriminate " +
+      'between demand\u2011absorption and demand\u2011exhaustion hypotheses ' +
+      'on the listed\u2011side decline. Listed spot down 28% / 6mo while ' +
+      'contract 1Y up ~38% over same window \u2014 forces the absorption ' +
+      'reading.',
+    deepLink: '/research/b200-curve-decomposition/',
   },
   {
     kind: 'market',
@@ -46,20 +49,6 @@ export const allNews: NewsItem[] = [
       'API are out of scope; readers are directed to survey\u2011based ' +
       'indices for the contract\u2011side surface.',
     deepLink: '/methodology',
-  },
-  {
-    kind: 'market',
-    slug: 'cross-index-semianalysis-0419',
-    date: '2026\u201104\u201119',
-    title: "SemiAnalysis H100 1Y contract series now cited as external validation signal",
-    deck:
-      "The lead research note at /research/b200\u2011curve\u2011decomposition/ " +
-      "now references SemiAnalysis's contract\u2011side index to discriminate " +
-      'between demand\u2011absorption and demand\u2011exhaustion hypotheses ' +
-      'on the listed\u2011side decline. Listed spot down 28% / 6mo while ' +
-      'contract 1Y up ~38% over same window \u2014 forces the absorption ' +
-      'reading.',
-    deepLink: '/research/b200-curve-decomposition/',
   },
   {
     kind: 'press',
@@ -102,6 +91,21 @@ export const allNews: NewsItem[] = [
       'growth\u2011by\u2011contract.',
     source: 'The Next Platform',
     sourceUrl: 'https://www.nextplatform.com/cloud/2026/04/09/coreweave-takes-as-much-financial-engineering-as-it-does-datacenter-design/5215794',
+  },
+  {
+    kind: 'press',
+    slug: 'meta-coreweave-21b-0409',
+    date: '2026\u201104\u201109',
+    title: 'Meta commits additional $21B to CoreWeave through 2032 for Vera Rubin inference',
+    deck:
+      "Per 8\u2011K filing on April 9: Meta's second major commitment to " +
+      'CoreWeave, running 2027\u20112032, structured for inference workloads ' +
+      "on NVIDIA's Vera Rubin platform across multiple sites. Brings " +
+      'combined Meta+CoreWeave commitments to roughly $35B \u2014 a real\u2011' +
+      'world instance of demand being absorbed into long\u2011tenor ' +
+      'contracts while listed\u2011side spot compresses.',
+    source: 'TNW',
+    sourceUrl: 'https://thenextweb.com/news/meta-coreweave-21-billion-ai-cloud-deal',
   },
   {
     kind: 'press',
