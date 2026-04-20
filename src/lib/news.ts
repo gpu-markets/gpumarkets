@@ -10,97 +10,112 @@
  * `press` (third-party coverage) — so rendering branches can stay
  * exhaustive. See src/lib/types.ts for the type definitions.
  *
- * Ordering: newest first. The first element is the landing-page lead.
- * Dates use non-breaking hyphens (U+2011) to match the convention used
- * across the rest of the site (research notes, fixing tables, masthead).
- *
- * SEED CONTENT — edit freely. The first few items below are
- * illustrative examples of the two kinds; replace with real entries
- * before the /news page is promoted publicly.
+ * Ordering: position [0] is the curated landing-page lead, chosen for
+ * editorial relevance rather than strict chronology. Positions [1]+ are
+ * reverse-chronological. Dates use non-breaking hyphens (U+2011) to
+ * match the convention used across the rest of the site.
  */
 import type { NewsItem } from './types';
 
 export const allNews: NewsItem[] = [
   {
-    kind: 'market',
-    slug: 'hyperbolic-h100-outlier-0418',
-    date: '2026\u201104\u201118',
-    title: 'Hyperbolic H100 SXM rejected as outlier at +2.8 MAD',
-    deck:
-      "Hyperbolic's advertised H100 SXM Spot rate of $1.12 / GPU\u2011hr fell " +
-      "2.8 median\u2011absolute\u2011deviations below today's estimator and " +
-      "was excluded from the fix. Eligible venues after rejection: 8 / 12.",
-    deepLink: '/data#h100-sxm-spot',
-  },
-  {
     kind: 'press',
-    slug: 'coreweave-b200-order-bloomberg-0417',
-    date: '2026\u201104\u201117',
-    title: 'CoreWeave reportedly orders 14k additional B200s for 2026 Q3 delivery',
-    deck:
-      'Bloomberg reports CoreWeave has signed an incremental Blackwell purchase ' +
-      'order worth $2.1B, front\u2011loading capacity ahead of projected training ' +
-      'demand from three unnamed frontier labs.',
-    source: 'Bloomberg',
-    sourceUrl: 'https://www.bloomberg.com/',
-  },
-  {
-    kind: 'market',
-    slug: 'shadeform-aggregator-onboarded-0415',
-    date: '2026\u201104\u201115',
-    title: 'Shadeform added as cross\u2011check aggregator (venue 12/12)',
-    deck:
-      'Shadeform\u2019s aggregated venue feed brings the covered\u2011venue count ' +
-      'to 12. Its observed rates are ingested as cross\u2011checks against ' +
-      'primary venues, not as independent contributors to the estimator.',
-    deepLink: '/venues#shadeform',
-  },
-  {
-    kind: 'press',
-    slug: 'h200-supply-semianalysis-0414',
-    date: '2026\u201104\u201114',
-    title: 'H200 supply bottlenecks and the narrowing H100 premium',
-    deck:
-      'SemiAnalysis argues HBM3e allocation, not silicon, is the binding ' +
-      'constraint on H200 availability through mid\u20112026, and that the ' +
-      'H200\u2013H100 spot premium will compress to under 15% by Q3.',
-    source: 'SemiAnalysis',
-    sourceUrl: 'https://semianalysis.com/',
-  },
-  {
-    kind: 'market',
-    slug: 'b200-first-obs-datacrunch-0412',
-    date: '2026\u201104\u201112',
-    title: 'B200 SXM first observed at DataCrunch (enters training tier)',
-    deck:
-      'DataCrunch\u2019s public pricing endpoint published an advertised ' +
-      'B200 SXM Spot rate for the first time today. Backfilled history ' +
-      'unavailable; series begins 2026\u201104\u201112.',
-    deepLink: '/data#b200-sxm-spot',
-  },
-  {
-    kind: 'press',
-    slug: 'neocloud-ma-information-0409',
+    slug: 'meta-coreweave-21b-0409',
     date: '2026\u201104\u201109',
-    title: 'Neocloud consolidation: M&A discussions heat up among mid\u2011tier providers',
+    title: 'Meta commits additional $21B to CoreWeave through 2032 for Vera Rubin inference',
     deck:
-      'The Information reports at least three mid\u2011tier neocloud operators ' +
-      'are in early acquisition talks, citing margin compression from spot\u2011price ' +
-      'declines and increasing HBM allocation scale economies.',
-    source: 'The Information',
-    sourceUrl: 'https://www.theinformation.com/',
+      "Per 8\u2011K filing on April 9: Meta's second major commitment to " +
+      'CoreWeave, running 2027\u20112032, structured for inference workloads ' +
+      "on NVIDIA's Vera Rubin platform across multiple sites. Brings " +
+      'combined Meta+CoreWeave commitments to roughly $35B \u2014 a real\u2011' +
+      'world instance of demand being absorbed into long\u2011tenor ' +
+      'contracts while listed\u2011side spot compresses.',
+    source: 'TNW',
+    sourceUrl: 'https://thenextweb.com/news/meta-coreweave-21-billion-ai-cloud-deal',
   },
   {
     kind: 'market',
-    slug: 'methodology-mad-threshold-0408',
-    date: '2026\u201104\u201108',
-    title: 'Outlier rejection threshold raised from 2.5 to 3.0 MAD',
+    slug: 'methodology-listed-surface-0419',
+    date: '2026\u201104\u201119',
+    title: "Methodology update \u2014 fix surface defined as 'listed advertised rates'",
     deck:
-      'After 60 days of production fixings, the median\u2011absolute\u2011deviation ' +
-      'rejection threshold is loosened from 2.5 to 3.0 to reduce false positives ' +
-      'on low\u2011venue\u2011count series. Change is retroactive; historical ' +
-      'fixings are not revised.',
-    deepLink: '/methodology#outlier-rejection',
+      'The methodology page now explicitly defines the daily fix as a ' +
+      'median of listed advertised rates observed on public venue APIs ' +
+      'at 00:30 UTC. Negotiated contract rates, private enterprise ' +
+      'agreements, and other transacted prices not visible on a public ' +
+      'API are out of scope; readers are directed to survey\u2011based ' +
+      'indices for the contract\u2011side surface.',
+    deepLink: '/methodology',
+  },
+  {
+    kind: 'market',
+    slug: 'cross-index-semianalysis-0419',
+    date: '2026\u201104\u201119',
+    title: "SemiAnalysis H100 1Y contract series now cited as external validation signal",
+    deck:
+      "The lead research note at /research/b200\u2011curve\u2011decomposition/ " +
+      "now references SemiAnalysis's contract\u2011side index to discriminate " +
+      'between demand\u2011absorption and demand\u2011exhaustion hypotheses ' +
+      'on the listed\u2011side decline. Listed spot down 28% / 6mo while ' +
+      'contract 1Y up ~38% over same window \u2014 forces the absorption ' +
+      'reading.',
+    deepLink: '/research/b200-curve-decomposition/',
+  },
+  {
+    kind: 'press',
+    slug: 'datavault-edge-gpu-sites-0417',
+    date: '2026\u201104\u201117',
+    title: 'Datavault AI launches edge GPU sites in NY/Philadelphia; targets 1,000 U.S. sites by end\u20112026',
+    deck:
+      'Edge neocloud expansion: up to 48 GPUs per site across 1,000 ' +
+      'urban micro\u2011edge sites in 100+ U.S. cities by year\u2011end. ' +
+      'Low\u2011latency inference and HPC positioning \u2014 capacity ' +
+      'buildout continues even as listed\u2011side spot compresses on ' +
+      'incumbent venues.',
+    source: 'Electronics Media',
+    sourceUrl: 'https://www.electronicsmedia.info/2026/04/17/datavault-ai-edge-gpu-sites/',
+  },
+  {
+    kind: 'press',
+    slug: 'coreweave-analyst-upgrade-0413',
+    date: '2026\u201104\u201113',
+    title: 'CoreWeave surges on analyst upgrade and AI contract momentum',
+    deck:
+      'Market reaction to compounding contract wins: analyst upgrades ' +
+      'and announced contract momentum drive CRWV shares higher. ' +
+      "Reinforces capital markets' view that contracted\u2011tier demand " +
+      'is accelerating in AI inference even as open marketplace rates ' +
+      'compress.',
+    source: 'The Motley Fool',
+    sourceUrl: 'https://www.fool.com/coverage/stock-market-today/2026/04/13/stock-market-today-april-13-coreweave-surges-on-analyst-upgrade-and-ai-contract-momentum/',
+  },
+  {
+    kind: 'press',
+    slug: 'coreweave-financial-engineering-0409',
+    date: '2026\u201104\u201109',
+    title: 'CoreWeave takes as much financial engineering as datacenter design',
+    deck:
+      "Timothy Prickett Morgan on CoreWeave's $30\u201335B planned 2026 " +
+      "capex against $87.8B of contracted future revenue: the financing " +
+      'structure is as load\u2011bearing as the infrastructure itself. ' +
+      'A sober read on neocloud capital intensity and the limits of ' +
+      'growth\u2011by\u2011contract.',
+    source: 'The Next Platform',
+    sourceUrl: 'https://www.nextplatform.com/cloud/2026/04/09/coreweave-takes-as-much-financial-engineering-as-it-does-datacenter-design/5215794',
+  },
+  {
+    kind: 'press',
+    slug: 'neocloud-storm-credit-0406',
+    date: '2026\u201104\u201106',
+    title: 'Neocloud storm gathers as data center deals stall over credit risk',
+    deck:
+      'Colocation operators reportedly rejecting neocloud providers on ' +
+      'credit grounds despite premium pricing (~$155\u2013160/kW) and ' +
+      '15\u2011year terms. Creditworthiness now dominates rate in deal ' +
+      'selection \u2014 evidence of tiering pressure on list\u2011side ' +
+      'operators whose spot rates are compressing.',
+    source: 'Data Center Knowledge',
+    sourceUrl: 'https://www.datacenterknowledge.com/cloud/neocloud-storm-gathers-as-data-center-deals-stall-over-credit-risk',
   },
 ];
 
