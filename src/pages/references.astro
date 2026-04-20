@@ -1,0 +1,155 @@
+---
+/**
+ * References — external sources cited in prose across the site and
+ * complementary indices that measure the transacted side of the GPU
+ * rental market (which this site, by design, does not measure).
+ *
+ * Curatorial, not exhaustive. Each entry carries a one-sentence
+ * "why it matters" note so a reader arriving cold understands the
+ * landscape positioning, not just the link.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="References · GPU Markets" currentPage="references">
+  <section class="hero">
+    <div class="wrap">
+      <h1>References</h1>
+      <p class="deck">
+        Indices that measure the transacted side of the GPU rental market,
+        methodology analogs for the statistical‑release convention this
+        site follows, and long‑form pieces cited in our research notes.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Transacted-side indices" />
+      <div class="prose">
+        <p>
+          <code>gpumarkets.dev</code> measures listed advertised rates on
+          public venue APIs. The indices below measure the transacted
+          side of the same market — negotiated contract rates and
+          surveyed deal‑flow — and are the principal complements readers
+          should consult when the two surfaces diverge.
+        </p>
+        <ul>
+          <li>
+            <strong>SemiAnalysis H100 1‑Year Rental Price Index.</strong>
+            Survey‑based contract‑rate series launched April 2, 2026.
+            Reports the ~$1.70 → ~$2.35 / GPU‑hr H100 1Y trajectory
+            (Oct 2025 → Mar 2026) and the "sold out across all GPU
+            types" on‑demand characterization we cite in the B200
+            decomposition note.
+            <br/>
+            <a href="https://newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity" target="_blank" rel="noopener">newsletter.semianalysis.com · the-great-gpu-shortage-rental-capacity</a>
+          </li>
+          <li>
+            <strong>Ornn Compute Price Index (OCPI).</strong>
+            Transacted GPU pricing index published behind the Bloomberg
+            Terminal since April 2, 2026. Reflects negotiated
+            transaction levels between data centers and compute buyers.
+            Terminal access required; not open data.
+            <br/>
+            <a href="https://ornn.com" target="_blank" rel="noopener">ornn.com</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Methodology analogs" />
+      <div class="prose">
+        <p>
+          References for the statistical‑release publishing convention
+          this site follows — daily fix, public methodology, versioned
+          series definitions, openly licensed historical data.
+        </p>
+        <ul>
+          <li>
+            <strong>Federal Reserve H.15 · Selected Interest Rates.</strong>
+            Daily interest‑rate reference with revision log, methodology
+            document, and versioned series definitions. The statistical
+            release ID, daily fixing cadence, public methodology, and
+            openly distributed historical series are the direct template
+            for H.GPU.
+            <br/>
+            <a href="https://www.federalreserve.gov/releases/h15/" target="_blank" rel="noopener">federalreserve.gov/releases/h15</a>
+          </li>
+          <li>
+            <strong>Platts Dated Brent.</strong>
+            Price assessment for physical cargoes of Brent crude. The
+            published methodology and the Market‑on‑Close process are
+            analogous to how a daily GPU fix is assembled from
+            concurrent observations under a declared estimator. A
+            useful reminder that a reference price is a constructed
+            object, not a discovered one.
+            <br/>
+            <a href="https://www.spglobal.com/commodity-insights/en/our-methodology/price-assessments/oil" target="_blank" rel="noopener">spglobal.com · commodity‑insights oil methodology</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Selected long-form reads" />
+      <div class="prose">
+        <p>
+          Pieces that bear directly on the listed‑vs‑transacted divergence
+          or on the compute‑market structure our research notes draw on.
+          Strict reverse‑chronological order.
+        </p>
+        <ul>
+          <li>
+            <span class="mono">2026‑04‑09</span> — Timothy Prickett Morgan,
+            <em>"CoreWeave takes as much financial engineering as it
+            does datacenter design"</em> (The Next Platform). Unpacks
+            the CoreWeave order‑book structure that the B200
+            decomposition note's demand proxy draws on.
+            <br/>
+            <a href="https://www.nextplatform.com/cloud/2026/04/09/coreweave-takes-as-much-financial-engineering-as-it-does-datacenter-design/5215794" target="_blank" rel="noopener">nextplatform.com · coreweave financial engineering</a>
+          </li>
+          <li>
+            <span class="mono">2026‑04‑02</span> — SemiAnalysis,
+            <em>"The Great GPU Shortage — Rental Capacity — Launching
+            our H100 1 Year Rental Price Index."</em>
+            Companion piece to the H100 1Y index launch; sets up the
+            contract‑side trajectory that diverges from listed spot.
+            <br/>
+            <a href="https://newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity" target="_blank" rel="noopener">newsletter.semianalysis.com · the-great-gpu-shortage-rental-capacity</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="How to read cross-source divergences" />
+      <div class="prose">
+        <p>
+          When a claim on <code>gpumarkets.dev</code> and a claim in one
+          of the sources above point in different directions, neither is
+          necessarily wrong — they are almost certainly measuring
+          different surfaces of the same market. The
+          <a href="/methodology">methodology page</a> is explicit about
+          what the listed‑side fix measures and does not measure; the
+          equivalent document for any transacted‑side index is the
+          starting point for reconciling a divergence.
+        </p>
+        <p>
+          Suggestions for additional references welcome — email
+          <a href="mailto:john@gpumarkets.dev">john@gpumarkets.dev</a>
+          or open a pull request on
+          <a href="https://github.com/gpu-markets/gpumarkets" rel="noopener">github.com/gpu-markets/gpumarkets</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
