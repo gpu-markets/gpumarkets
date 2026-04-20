@@ -1,0 +1,152 @@
+---
+/**
+ * Roadmap — what's shipped vs what's planned. Content is curated by hand
+ * rather than pulled from issues so the narrative is editorial, not a
+ * raw backlog dump. Updated at the same cadence as methodology revisions.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="Roadmap · GPU Markets" currentPage="roadmap">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Roadmap</h1>
+      <p class="deck">
+        What Phase 1 delivered, what Phase 2 is building, and how the
+        project gets from a static publication to a machine‑readable
+        settlement‑oracle layer for compute derivatives.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Phase 1 · Shipped" />
+      <div class="prose">
+        <ul>
+          <li>
+            Daily fixing benchmark across 12 venues and 13 chip‑tenor
+            series (H100, H200, B200, A100, L40S, MI300X, RTX 4090/5090,
+            L4, T4, MI250), covering spot, on‑demand, and 1‑year reserved
+            tenors.
+          </li>
+          <li>
+            Trimmed‑mean estimator with ±2.5 MAD outlier rejection
+            (raised to 3.0 MAD on 2026‑04‑08 after production data
+            accumulated).
+          </li>
+          <li>
+            Capacity‑weighted companion series
+            (<span class="mono">.cw</span>) on the training tier,
+            published alongside each headline fix as a research series.
+          </li>
+          <li>
+            180‑day price history with interactive chart on the landing
+            page; 30‑day CSV export for every series.
+          </li>
+          <li>
+            RSS feeds: <a href="/feed.xml">/feed.xml</a> (research notes)
+            and <a href="/news.xml">/news.xml</a> (market events and
+            press coverage).
+          </li>
+          <li>
+            First research note: the B200 curve decomposition —
+            <a href="/research/b200-curve-decomposition/">where did the demand go?</a>
+          </li>
+          <li>
+            Full methodology page with explicit "what the fix measures /
+            does not measure" framing, separating the listed side from
+            the transacted side.
+          </li>
+          <li>
+            Open licensing: data CC BY 4.0, code Apache 2.0, repo public
+            at
+            <a href="https://github.com/gpu-markets/gpumarkets" target="_blank" rel="noopener">
+              github.com/gpu-markets/gpumarkets
+            </a>.
+          </li>
+          <li>
+            Email newsletter subscription via Buttondown, integrated
+            into the footer on every page.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Phase 2 · In scope" />
+      <div class="prose">
+        <ul>
+          <li>
+            Astro content collections
+            (<code>src/content/config.ts</code>) for series, venues,
+            research notes, and news events, with Zod schemas matched
+            to <code>src/lib/types.ts</code>.
+          </li>
+          <li>
+            Dynamic route <code>src/pages/series/[slug].astro</code>
+            generating one detail page per series (13 pages) with
+            full observation timeline and per‑venue rate history.
+          </li>
+          <li>
+            Dynamic route <code>src/pages/venues/[slug].astro</code>
+            with per‑venue detail pages covering scrape cadence, terms
+            of service review dates, SKU coverage, and eligibility
+            transitions.
+          </li>
+          <li>
+            MDX support for research notes, with one permalink per
+            note at <code>/research/&lbrace;slug&rbrace;/</code>.
+          </li>
+          <li>
+            External data repo at <code>gpu-markets/gpu-markets</code>
+            (separate from this site repo) containing the raw
+            observations, estimator code, and daily fixings in
+            machine‑readable form (JSON + Parquet).
+          </li>
+          <li>
+            GitHub Actions workflow that rebuilds this site whenever
+            the data repo publishes a new fix, so daily updates become
+            automatic rather than fixture‑driven.
+          </li>
+          <li>
+            <code>weighted_median()</code> implementation and
+            <code>data/venue-capacity.json</code> in the data repo,
+            replacing the current fixture <span class="mono">.cw</span>
+            values with true capacity‑weighted computations.
+          </li>
+          <li>
+            Derived series: listed‑minus‑transacted spread between
+            H.GPU and external contract‑side indices, published as
+            <code>GPUM.H100.SXM.R1Y.SPREAD</code> and similar.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Phase 3 · Settlement‑oracle integration" />
+      <div class="prose">
+        <p>
+          Positioning the H.GPU daily fix as a settlement reference
+          price for cash‑settled futures, perpetual funding rate
+          oracles, and structured products on GPU compute. This is
+          market infrastructure work, not site work — the primary
+          outputs are integration partnerships with derivatives venues
+          rather than new pages. Direct inquiries:
+          <a href="mailto:john@gpumarkets.dev">john@gpumarkets.dev</a>.
+        </p>
+        <p>
+          The data and estimator are already open under CC BY 4.0 and
+          Apache 2.0, so integration requires no license negotiation —
+          only attribution and a reciprocal link.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

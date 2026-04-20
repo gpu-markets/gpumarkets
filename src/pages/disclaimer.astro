@@ -1,0 +1,126 @@
+---
+/**
+ * Disclaimer — licensing, warranty disclaimer, and the not-investment-
+ * advice line, gathered in one place and linked from every page's footer.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="Disclaimer · GPU Markets" currentPage="disclaimer">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Disclaimer</h1>
+      <p class="deck">
+        Licensing, warranty, and the not‑investment‑advice line, in one
+        place.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Not investment advice" />
+      <div class="prose">
+        <p>
+          Nothing published by GPU Markets constitutes investment
+          advice, a recommendation to buy or sell any financial
+          instrument, or an offer of any service regulated under the
+          securities laws of any jurisdiction. The daily fix, the
+          research notes, the news‑section items, and every other
+          artifact published here are research commentary, not
+          advisory output.
+        </p>
+        <p>
+          Readers making capital‑allocation decisions informed by this
+          site should perform independent due diligence and consult
+          appropriately licensed professionals. GPU Markets, its
+          maintainer, and its contributors accept no liability for
+          decisions made in reliance on published information.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Data license · CC BY 4.0" />
+      <div class="prose">
+        <p>
+          All fixing values, venue observations, and research‑series
+          data published on <code>gpumarkets.dev</code> are released
+          under the Creative Commons Attribution 4.0 International
+          license
+          (<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">
+            CC BY 4.0
+          </a>).
+          You are free to share and adapt the data for any purpose,
+          including commercial use, under the single condition that
+          attribution is given to GPU Markets with a link back to
+          <a href="https://gpumarkets.dev">gpumarkets.dev</a> or the
+          specific fix URL being cited.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Code license · Apache 2.0" />
+      <div class="prose">
+        <p>
+          The estimator implementation, the observation pipeline, the
+          site source, and every other piece of code in the project
+          repository at
+          <a href="https://github.com/gpu-markets/gpumarkets" target="_blank" rel="noopener">
+            github.com/gpu-markets/gpumarkets
+          </a>
+          is released under the Apache License 2.0
+          (<a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener">
+            Apache 2.0
+          </a>).
+          Self‑hosting the estimator for zero‑trust verification of
+          published fixings is explicitly supported and encouraged.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Warranty · none" />
+      <div class="prose">
+        <p>
+          Data and code are provided on an as‑is basis, without any
+          warranty of any kind, express or implied, including but not
+          limited to warranties of merchantability, fitness for a
+          particular purpose, or non‑infringement. Best efforts are
+          made to publish each daily fix on schedule and with the
+          methodology described at
+          <a href="/methodology">/methodology</a>, but no service‑level
+          agreement is offered.
+        </p>
+        <p>
+          Observed rates are sourced from each venue's public rate‑card
+          API at fix time; if a venue changes its pricing after
+          observation, or if an API endpoint returns stale or
+          inconsistent data, the resulting fix reflects the observation,
+          not the subsequent correction.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Contact" />
+      <div class="prose">
+        <p>
+          <strong>John Jung</strong>, Founder, GPU Markets, Vancouver, BC<br>
+          <a href="mailto:john@gpumarkets.dev">john@gpumarkets.dev</a> ·
+          <a href="https://x.com/gpumarkets" target="_blank" rel="noopener">@gpumarkets</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>

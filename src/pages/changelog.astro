@@ -1,0 +1,119 @@
+---
+/**
+ * Changelog — reverse-chronological log of significant project activity
+ * since Phase 1 ship. Content is hand-curated commit summary rather than
+ * a raw `git log` dump; entries are grouped by calendar day with short
+ * descriptions of what shipped and why.
+ *
+ * Phase 2 will likely replace this with an Astro content collection
+ * that reads structured entries from a `changelog/` directory.
+ */
+import Base from '../layouts/Base.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+---
+
+<Base title="Changelog · GPU Markets" currentPage="changelog">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Changelog</h1>
+      <p class="deck">
+        Reverse‑chronological log of significant project activity since
+        Phase 1 ship. Each entry links to the source commit for full
+        detail.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="2026‑04‑19 · Divergence reframing + open‑source launch" />
+      <div class="prose">
+        <p>
+          Campaign thesis pivoted from "GPU rental rates down 11.6%" to
+          the listed‑vs‑transacted divergence after a pre‑pitch
+          cross‑check against SemiAnalysis's April 2, 2026 contract
+          index revealed opposite directional moves on the same asset
+          class. Full reframing propagated across the site, the B200
+          research note, pitch documents, and the news section.
+        </p>
+        <p>
+          Same day: repository transferred from
+          <code>gimchiflow/gpumarkets.dev</code> to
+          <code>gpu-markets/gpumarkets</code> and flipped public under
+          Apache 2.0 (code) and CC BY 4.0 (data). Cloudflare Workers
+          Builds webhook had to be re‑wired post‑transfer; custom domain
+          binding moved from a now‑orphan Worker to the auto‑deploying
+          replacement.
+        </p>
+        <p>
+          Footer subscribe form shipped; Buttondown newsletter
+          configured via API with Postmark as delivery; 5 DNS records
+          added to Cloudflare (DKIM, pm‑bounces, track, inbound MX,
+          DMARC).
+        </p>
+        <ul>
+          <li><code>645e783</code> — <em>feat(footer):</em> Buttondown subscribe form above the link columns</li>
+          <li><code>7dced36</code> — <em>fix(research):</em> tighten B200 note citations; update draft marker for reduced scope</li>
+          <li><code>ea3cd42</code> — <em>fix(base):</em> point footer GitHub link at actual repo URL</li>
+          <li><code>3cb075c</code> — <em>docs(readme):</em> refresh CI and RSS references before open‑source launch</li>
+          <li><code>2a29742</code> — <em>fix(venues):</em> rename "First obs." to "Pipeline since"; document backfill</li>
+          <li><code>6cfa013</code> — <em>fix(news):</em> strict reverse‑chronological ordering; drop curated lead</li>
+          <li><code>bd03e07</code> — <em>feat(news):</em> replace seed items with 5 real press + 2 real market events</li>
+          <li><code>56ce133</code> — <em>feat(site):</em> reframe as listed‑side index; B200 note discriminates absorption from exhaustion</li>
+          <li><code>c2896e3</code> — <em>chore(repo):</em> track previously‑untracked project files</li>
+          <li><code>b4edb09</code> — <em>fix(astro):</em> normalize remaining <code>\u00A7</code> escape in methodology.astro</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="2026‑04‑18 · Phase 1 launch preparation" />
+      <div class="prose">
+        <p>
+          Initial research note for the B200 decomposition shipped as a
+          standalone detail page, completing the first of four
+          launch‑blocking gates. Capacity‑weighted companion series
+          (<span class="mono">.cw</span>) added as a research companion
+          on each training‑tier fixing row.
+        </p>
+        <p>
+          Licensing and repository structure formalized: Apache 2.0 on
+          code, CC BY 4.0 on data, <code>CONTRIBUTING.md</code> added.
+          News section and <code>/news.xml</code> RSS feed shipped as a
+          separate subscription stream from the research feed. Published
+          social preview card (<code>public/og.png</code>).
+        </p>
+        <ul>
+          <li><code>99a3da5</code> — <em>feat(site):</em> publish B200 curve decomposition research note</li>
+          <li><code>0bf1e34</code> — <em>feat(site):</em> add capacity‑weighted (.cw) companion series to training tier</li>
+          <li><code>2348ed3</code> — <em>fix(astro):</em> normalize <code>\uXXXX</code> escapes in raw markup to literal unicode</li>
+          <li><code>a1c1bac</code> — <em>fix(data):</em> sync published deltas to chart‑data.js; move 7d‑decline glance H200</li>
+          <li><code>e3a5dc1</code> — <em>feat(site):</em> initial footer GitHub link pointing at <code>gpu-markets</code> org repo</li>
+          <li><code>5881d91</code> — <em>chore:</em> add LICENSE (Apache 2.0), LICENSE‑DATA (CC BY 4.0), CONTRIBUTING</li>
+          <li><code>5c0e634</code> — <em>feat(site):</em> add /news.xml RSS feed (distinct from research feed)</li>
+          <li><code>834fa5d</code> — <em>feat(site):</em> add § 07 News teaser + /news archive page</li>
+          <li><code>172624a</code> — <em>feat(site):</em> add News types + src/lib/news.ts data module</li>
+          <li><code>445ae6f</code> — <em>feat(site):</em> add public/og.png (1200x630 social preview)</li>
+          <li><code>273b8e6</code> — <em>feat(site):</em> extract research notes to src/lib + add /feed.xml RSS route</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Full history" />
+      <div class="prose">
+        <p>
+          The full commit history is public at
+          <a href="https://github.com/gpu-markets/gpumarkets/commits/main" target="_blank" rel="noopener">
+            github.com/gpu-markets/gpumarkets/commits/main
+          </a>. Every methodology change and estimator revision is
+          permalinked there.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
