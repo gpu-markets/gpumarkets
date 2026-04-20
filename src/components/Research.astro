@@ -1,6 +1,6 @@
 ---
 import Eyebrow from './Eyebrow.astro';
-import { leadNote as lead, previousNotes as previous } from '../lib/research-notes';
+import { leadNote as lead, previousNotes as previous, detailPageSlugs } from '../lib/research-notes';
 
 /**
  * § 06 · Research — the lead note (prominent .lead-note block) and an
@@ -35,7 +35,7 @@ import { leadNote as lead, previousNotes as previous } from '../lib/research-not
           previous.map((n) => (
             <li>
               <span class="d">{n.date}</span>
-              <span class="t"><a href="/research">{n.title}</a></span>
+              <span class="t"><a href={detailPageSlugs.has(n.slug) ? `/research/${n.slug}/` : '/research'}>{n.title}</a></span>
             </li>
           ))
         }

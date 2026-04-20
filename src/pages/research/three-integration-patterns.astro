@@ -1,0 +1,323 @@
+---
+/**
+ * Research Note: Three integration patterns for a GPU compute
+ * derivatives market.
+ *
+ * Market-structure commentary rather than price analysis. Positions
+ * H.GPU as a candidate settlement oracle for the emerging
+ * compute-derivatives stack (Architect Financial Technologies,
+ * Ornn Compute Exchange, Helix, Compute Exchange, OneChronos, SF
+ * Compute). Adapted and condensed from the V2 post-launch briefing
+ * (docs/marketing/v2-one-pager.md, not in-repo).
+ *
+ * Scope of sourced claims:
+ *   - Venue and valuation specifics (Ornn seed, SF Compute valuation,
+ *     Architect regulatory status, Brett Harrison provenance) are
+ *     directional summaries of publicly reported facts as of
+ *     2026-04-20. A researcher upgrading this note later should
+ *     verify each against primary filings / press.
+ *   - Independence / auditability / low-friction criteria are
+ *     drawn from well-established commodity-derivatives market
+ *     structure (CBOT, Platts Dated Brent, Fed Funds).
+ */
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import { leadNote } from '../../lib/research-notes';
+---
+
+<Base
+  title={`${leadNote.title} · GPU Markets Research`}
+  currentPage="research"
+>
+  <section class="hero">
+    <div class="wrap">
+      <h1>{leadNote.title}</h1>
+      <p class="deck">{leadNote.deck}</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label={`Research Note · ${leadNote.date}`} />
+      <div class="prose">
+        <p>
+          Between October 2025 and April 2026, a market that did not
+          exist became real. Six exchanges, index providers, and
+          auction designers are building regulated or crypto‑native
+          venues for derivatives on GPU compute:
+        </p>
+        <ul>
+          <li>
+            <strong>Architect Financial Technologies</strong> — founded
+            by former FTX US president Brett Harrison; regulated
+            perpetual futures on GPU rental and RAM prices, launch
+            imminent pending regulatory approval. Partnered with Ornn
+            as price‑index provider.
+          </li>
+          <li>
+            <strong>Ornn Compute Exchange</strong> — $5.7M October 2025
+            seed round; positioning as the first regulated derivatives
+            exchange for compute. Publishes its own GPU price index,
+            added to the Bloomberg Terminal on 2026‑04‑02. Vertically
+            integrated: index <em>and</em> exchange.
+          </li>
+          <li>
+            <strong>Helix</strong> — crypto‑native perpetual‑futures
+            DEX. Launched the first‑ever NVIDIA H100 perpetual futures
+            market.
+          </li>
+          <li>
+            <strong>Compute Exchange</strong> — backed by DRW;
+            institutional derivatives venue in development. Projects a
+            potential $5T compute‑derivatives market at maturity.
+          </li>
+          <li>
+            <strong>OneChronos × Paul Milgrom</strong> — combinatorial
+            auction market for GPU compute, designed by the
+            Nobel‑laureate auction theorist.
+          </li>
+          <li>
+            <strong>SF Compute</strong> — cluster‑time auctions and
+            forward sales. $300M valuation, $40M Series A late 2025.
+          </li>
+        </ul>
+        <p>
+          Every one of these venues has the same structural dependency:
+          a reference price to settle cash contracts against or to fund
+          perpetual positions against. The index layer is the missing
+          piece of market infrastructure for compute, and it is where
+          value has historically accrued in commodity derivatives.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Why the settlement oracle must be independent" />
+      <div class="prose">
+        <p>
+          Commodity futures markets converged on a pattern over 150
+          years. CBOT wheat futures settle against USDA spot reports.
+          Brent crude settles against Platts' Dated Brent assessment.
+          Fed Funds futures settle against the effective federal funds
+          rate published by the New York Fed. Every serious commodity
+          derivatives market is settled against a benchmark that is:
+        </p>
+        <ul>
+          <li>
+            <strong>Independent of the exchange.</strong> A venue that
+            settles its own contracts against its own index has an
+            unhedgeable conflict of interest. Institutional
+            counterparties demand third‑party settlement.
+          </li>
+          <li>
+            <strong>Auditable.</strong> Counterparties with capital at
+            risk must be able to verify the settlement price against
+            reproducible data and methodology. Opaque indices survive
+            only where counterparties accept provider risk.
+          </li>
+          <li>
+            <strong>Low‑friction.</strong> Exchanges route around
+            licensing and royalty costs when possible. A fee‑free
+            index with an open methodology has structural adoption
+            advantages over a paywalled one.
+          </li>
+        </ul>
+        <p>
+          The current GPU compute index landscape fails at least two
+          of these criteria. Ornn's index is proprietary, fee‑gated on
+          the Bloomberg Terminal, and operated by an entity that is
+          also launching the exchange that would settle against it.
+          Survey‑based indices (SemiAnalysis, Silicon Data) are
+          respected but not daily‑published, not reproducible from
+          public inputs, and not operated as exchange‑ready settlement
+          references. The open‑index slot is unfilled.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="What H.GPU provides" />
+      <div class="prose">
+        <p>
+          <strong>H.GPU</strong> is the daily statistical release of
+          listed GPU rental rates published at 00:30 UTC by
+          <code>gpumarkets.dev</code>. Twelve rental venues, thirteen
+          chip‑tenor series across spot, on‑demand, and reserved
+          tenors. The estimator is a trimmed median with ±3.0
+          median‑absolute‑deviation outlier rejection. Every property
+          that matters for settlement is in place by construction:
+        </p>
+        <ul>
+          <li>
+            <strong>Data under Creative Commons Attribution 4.0.</strong>
+            Any exchange can settle contracts against H.GPU without
+            licensing cost or royalty. Attribution preserves the
+            reference brand without fee friction.
+          </li>
+          <li>
+            <strong>Estimator under Apache 2.0.</strong> Open source at
+            <code>github.com/gpu-markets/gpumarkets</code>. Any
+            counterparty can self‑host the estimator for zero‑trust
+            verification of any published fix. No settlement ever has
+            to be "trust us."
+          </li>
+          <li>
+            <strong>Independent.</strong> Not operated by any exchange,
+            venue, or neocloud. No revenue from settlement. No
+            vertical integration. No conflict.
+          </li>
+          <li>
+            <strong>Auditable methodology.</strong> Every outlier
+            rejection is logged publicly on <a href="/news">/news</a>.
+            Methodology changes ship through <a href="/changelog">/changelog</a>.
+            The exact observation set on any given fix day is
+            reproducible from the public data repository.
+          </li>
+          <li>
+            <strong>Daily cadence, reliable timing.</strong> 00:30 UTC
+            fix, compatible with standard end‑of‑day cash‑settlement
+            conventions used in commodity markets.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Pattern 1 · Cash-settled futures" />
+      <div class="prose">
+        <p>
+          Contract expires on a calendar date; settlement price is the
+          H.GPU fix published at 00:30 UTC on the expiry date for the
+          underlying chip‑tenor series. The exchange clears cash P&amp;L
+          at that price and the contract terminates — identical in
+          mechanics to how oil futures on NYMEX settle against Platts
+          Dated Brent on the contract's last trading day.
+        </p>
+        <p>
+          Architect Financial Technologies' planned perpetual futures
+          on GPU rental and RAM prices map directly onto this pattern,
+          as does Compute Exchange's institutional roadmap. The
+          specific series a contract settles against is a market‑maker
+          choice: an <code>H100.SXM.R1Y</code> contract settles against
+          the H200 reserved one‑year series; a <code>B200.SXM.SPOT</code>
+          contract settles against the B200 spot fix. The underlying
+          is the series identifier; the settlement price is that
+          day's published value.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Pattern 2 · Perpetual funding oracle" />
+      <div class="prose">
+        <p>
+          A perpetual futures contract has no expiry date; instead,
+          long and short positions exchange a funding payment each
+          period, sized to pull the perp's mark price toward the
+          underlying spot reference. Helix's NVIDIA H100 perpetual
+          futures market and any future crypto‑native perp DEX can
+          consume H.GPU as the underlying reference without on‑chain
+          streaming infrastructure: a single daily published value is
+          simpler to ingest than a tick‑by‑tick oracle.
+        </p>
+        <p>
+          Mark price on perp positions ticks against the day's H.GPU
+          fix; the funding rate for the next period is computed from
+          the mark‑versus‑index spread. The index is read‑only; the
+          venue handles its own book and risk. Cost to the venue: one
+          HTTP GET per day to <code>gpumarkets.dev/data</code>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Pattern 3 · Basis trading" />
+      <div class="prose">
+        <p>
+          The spread between H.GPU (the listed‑side fix published
+          here) and a transacted‑side contract index (SemiAnalysis's
+          H100 1‑year rental index is the reference example) is itself
+          a tradeable signal. As of mid‑April 2026, that spread has
+          detached by more than at any point in the market's short
+          history — listed B200 SXM spot down 28% over six months,
+          contract‑side H100 1‑year up roughly 38% over the same
+          window, on‑demand capacity described as "sold out across all
+          GPU types."
+        </p>
+        <p>
+          A venue can list a <em>basis contract</em> whose payoff is
+          <span class="mono">H.GPU − SemiAnalysis.1Y</span> (or the
+          equivalent against Ornn's OCPI once a legal framework exists
+          for cross‑index settlement). Traders take views on whether
+          price discovery returns to the listed surface, stays in
+          contracts, or widens further. The B200 decomposition note
+          (<a href="/research/b200-curve-decomposition/">Apr 11</a>)
+          lays out the three hypotheses — supply, exhaustion,
+          absorption — each of which implies a different path for the
+          spread.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="How to integrate" />
+      <div class="prose">
+        <p>
+          GPU Markets is not a commercial data vendor. There is no
+          license to sign, no royalty, no rate card. The data and
+          estimator are published under Creative Commons Attribution
+          4.0 and Apache 2.0 respectively, and will remain so. The
+          only asks for integration as a settlement oracle or
+          reference price are attribution on public materials and a
+          reciprocal link to <code>gpumarkets.dev</code>.
+        </p>
+        <p>
+          Derivatives venues, prediction markets, structured‑product
+          issuers, or anyone consuming H.GPU as a reference are
+          invited to coordinate directly with the maintainer: email
+          <a href="mailto:john@gpumarkets.dev">john@gpumarkets.dev</a>.
+          Long‑form specifications for the estimator and the venue
+          pipeline live at <a href="/methodology">/methodology</a>;
+          complementary indices on the transacted side are catalogued
+          at <a href="/references">/references</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Note on scope" />
+      <div class="prose">
+        <p>
+          This is commentary on market infrastructure rather than
+          price analysis. It carries no view on the correct mark for
+          any chip‑tenor series at any fix date. Venue, valuation,
+          and regulatory‑status references above are directional
+          summaries of publicly reported facts as of 2026‑04‑20; a
+          researcher integrating H.GPU into a specific venue's
+          settlement pipeline should verify each against the
+          primary filings.
+        </p>
+        <p>
+          Not investment advice.
+        </p>
+        <p>
+          <a href="/research">← Back to Research</a>
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
