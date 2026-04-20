@@ -110,6 +110,33 @@ const ogImage = `${SITE_URL}/og.png`;
 
     <footer>
       <div class="wrap">
+        <section class="footer-subscribe" aria-labelledby="sub-heading">
+          <div class="footer-subscribe-eyebrow">§ · Newsletter</div>
+          <div class="footer-subscribe-body">
+            <div class="footer-subscribe-copy">
+              <h3 id="sub-heading">Daily fixing release · 00:30 UTC</h3>
+              <p>Research notes, methodology updates, and market events — delivered weekly.</p>
+            </div>
+            <form
+              class="footer-subscribe-form"
+              action="https://buttondown.com/api/emails/embed-subscribe/gpumarkets"
+              method="post"
+              target="popupwindow"
+              onsubmit="window.open('https://buttondown.com/gpumarkets', 'popupwindow')"
+            >
+              <label for="bd-email" class="visually-hidden">Email address</label>
+              <input
+                type="email"
+                name="email"
+                id="bd-email"
+                placeholder="you@email.com"
+                autocomplete="email"
+                required
+              />
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+        </section>
         <div class="cols">
           <div>
             <h4>Project</h4>

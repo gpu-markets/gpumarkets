@@ -932,3 +932,94 @@ a { color: var(--link); }
   font-variant-numeric: tabular-nums;
 }
 
+
+/* ---------- Footer subscribe form (Buttondown) ---------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+.footer-subscribe {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 22px 0 26px;
+  margin-bottom: 28px;
+}
+.footer-subscribe-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+.footer-subscribe-body {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+.footer-subscribe-copy h3 {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.25;
+  margin: 0 0 4px;
+  letter-spacing: -0.005em;
+}
+.footer-subscribe-copy p {
+  font-family: var(--serif);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+.footer-subscribe-form {
+  display: flex;
+  gap: 8px;
+  min-width: 340px;
+}
+.footer-subscribe-form input[type="email"] {
+  flex: 1;
+  min-width: 220px;
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 10px 12px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  border-radius: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.footer-subscribe-form input[type="email"]::placeholder {
+  color: var(--muted);
+}
+.footer-subscribe-form input[type="email"]:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+.footer-subscribe-form button[type="submit"] {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--bg);
+  cursor: pointer;
+  border-radius: 0;
+}
+.footer-subscribe-form button[type="submit"]:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+@media (max-width: 720px) {
+  .footer-subscribe-body { grid-template-columns: 1fr; gap: 16px; }
+  .footer-subscribe-form { min-width: 0; }
+}
