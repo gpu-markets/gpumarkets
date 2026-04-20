@@ -53,7 +53,13 @@ export interface Venue {
   name: string;
   access: string;      // "REST API", "GraphQL API", etc.
   eligible: 'yes' | 'cross-check' | 'reference';
-  firstObs: string;    // ISO date
+  /**
+   * Date live observation of this venue began in the gpumarkets.dev
+   * pipeline. Rendered as "Pipeline since" in the venue table.
+   * Distinct from the chart's 180-day price history, which extends
+   * earlier via backfill from venue-published archives. ISO date.
+   */
+  firstObs: string;
   url: string;
   cadence?: string;
   tosLastReviewed?: string;

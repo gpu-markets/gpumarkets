@@ -18,7 +18,14 @@ interface VenueRow {
   url: string;
   access: string;
   status: VenueStatus;
-  firstObs: string; // ISO date, wrapped with non-breaking hyphens on render
+  /**
+   * Date the gpumarkets.dev pipeline first began live observation of
+   * this venue. Distinct from the chart's 180-day price history, which
+   * extends earlier via backfill from venue-published archives and
+   * public rate-card snapshots. ISO date, rendered with non-breaking
+   * hyphens.
+   */
+  firstObs: string;
 }
 
 const rows: VenueRow[] = [
@@ -53,7 +60,7 @@ const tagLabel: Record<VenueStatus, string> = {
             <th scope="col">Venue</th>
             <th scope="col">Access</th>
             <th scope="col">Eligible</th>
-            <th scope="col" class="num">First obs.</th>
+            <th scope="col" class="num">Pipeline since</th>
           </tr>
         </thead>
         <tbody>
@@ -78,9 +85,13 @@ const tagLabel: Record<VenueStatus, string> = {
       Eligibility is a property of the observation pipeline, not a quality
       judgement. Hyperscaler list prices are posted alongside as a
       <span class="mono">Reference</span> series but excluded from the
-      trimmed‑mean estimator. Per‑venue terms of service, scrape
-      cadence, and the latest eligibility review date are available on the
-      <a class="vlink" href="/venues">venues directory</a>.
+      trimmed‑mean estimator. The <span class="mono">Pipeline since</span>
+      column records the date live observation began for each venue; the
+      hero chart's 180‑day series extends earlier via backfill from
+      venue‑published rate‑card archives and public snapshots, so
+      chart history predates pipeline start by design. Per‑venue terms
+      of service, scrape cadence, and the latest eligibility review date
+      are available on the <a class="vlink" href="/venues">venues directory</a>.
     </p>
   </div>
 </section>
