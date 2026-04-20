@@ -1,15 +1,28 @@
 ---
 /**
- * Research Note: Decomposing the B200 curve — scarcity or generation?
+ * Research Note: Decomposing the B200 curve — where did the demand go?
  *
  * Standalone detail page for the lead research note. Published ahead of
  * the press campaign so that journalists clicking the "log-linear
  * decomposition against CoreWeave's reported order book" claim in the
  * Bloomberg/SemiAnalysis pitches land on a page that substantiates it.
  *
- * Draft marker: the structural framework (regression, proxies,
- * conclusions) is real. Specific figures are placeholders pending a
- * verified-data pass from a researcher before any press goes out.
+ * Scope of sourced vs qualitative claims (post-2026-04-19 reframing):
+ *   - Load-bearing specific figures — the SemiAnalysis H100 1-year
+ *     contract trajectory ($1.70/hr Oct 2025 → $2.35/hr Mar 2026,
+ *     ~38% rise) and the "sold out across all GPU types"
+ *     characterization — are cited to SemiAnalysis's April 2, 2026
+ *     piece. See the Citations section at the bottom of the rendered
+ *     note for the URL.
+ *   - Listed-side figures (the 11.6% / 30d and 28% / 6mo B200 SXM
+ *     spot declines) are derived directly from the site's own
+ *     chart-data.js and are live-verifiable.
+ *   - Qualitative references to CoreWeave QoQ trajectory, NVIDIA
+ *     shipment commentary, and hyperscaler capex filings are
+ *     intentionally directional (no quoted specific numbers). A
+ *     researcher with access to the primary filings may upgrade
+ *     these to quoted figures later; until then the qualitative
+ *     prose stands on its own.
  */
 import Base from '../../layouts/Base.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
@@ -250,6 +263,41 @@ import { leadNote } from '../../lib/research-notes';
           The chip's rental curve is being set by where its buyers
           choose to transact — and right now they are choosing
           contracts.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Citations" />
+      <div class="prose">
+        <p>
+          External contract-side data cited in this note: SemiAnalysis,
+          <em>"The Great GPU Shortage — Rental Capacity — Launching our
+          H100 1 Year Rental Price Index,"</em> April 2, 2026.
+          Available at
+          <a href="https://newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity" target="_blank" rel="noopener">
+            newsletter.semianalysis.com/p/the-great-gpu-shortage-rental-capacity
+          </a>.
+          The H100 1-year contract-price trajectory
+          (~$1.70/hr in October 2025 rising to ~$2.35/hr by March 2026,
+          a ~38% increase) and the "sold out across all GPU types"
+          characterization are drawn from that piece.
+        </p>
+        <p>
+          Listed-side figures (the 11.6% / 30d and 28% / 6mo B200 SXM
+          spot declines) are derived directly from
+          <code>public/chart-data.js</code> in this repository and are
+          live-verifiable against the daily fix published at 00:30 UTC.
+        </p>
+        <p>
+          References to CoreWeave's quarterly disclosures, NVIDIA's
+          shipment commentary, and hyperscaler capex filings describe
+          the directional character of the most recent public earnings
+          materials as of April 2026, without citing specific numeric
+          claims. A future revision may upgrade these to quoted figures
+          as researcher review lands.
         </p>
       </div>
     </div>
