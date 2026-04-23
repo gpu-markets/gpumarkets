@@ -6,14 +6,23 @@ import CapacityWeightedRow from './CapacityWeightedRow.astro';
  * Fixing table — renders one tier of series as a dense data table
  * with expandable spec rows and sparklines. Matches the standalone
  * HTML class names exactly so shared.css applies unchanged.
+ *
+ * Strike metadata: a nominal strike time is passed via `strikeAt`.
+ * Rows whose `series.fixedAt` diverges get a "◦" off-strike marker.
+ *
+ * Footnotes: each series may carry `footnotes: string[]`; these are
+ * globally numbered across the tier in row-order, rendered as
+ * superscripts next to the ticker, and listed below the table.
  */
 
 export interface Props {
   series: Series[];
   ariaLabel: string;
+  /** ISO datetime, e.g. "2026-04-18T00:30:00Z". */
+  strikeAt: string;
 }
 
-const { series, ariaLabel } = Astro.props;
+const { series, ariaLabel, strikeAt } = Astro.props;
 
 function pctClass(v: number): 'pos' | 'neg' | 'zero' {
   if (v > 0) return 'pos';
@@ -32,7 +41,46 @@ function slugify(ticker: string): string {
   // GPUM.H100.SXM.SPOT -> h100-sxm-spot
   return ticker.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-');
 }
+
+/**
+ * "2026-04-18T00:30:00Z" -> "2026‑04‑18 · 00:30 UTC", with non-breaking
+ * hyphens in the date to match the site-wide typographic convention.
+ */
+function strikeLabel(iso: string): string {
+  const date = iso.slice(0, 10).replace(/-/g, '\u2011');
+  const time = iso.slice(11, 16);
+  return `${date} \u00B7 ${time} UTC`;
+}
+
+// Flatten footnotes into a single numbered list per tier, in row order.
+type NumberedFootnote = { n: number; text: string; seriesId: string };
+const footnoteList: NumberedFootnote[] = [];
+const footnoteIndexBySeries = new Map<string, number[]>();
+for (const s of series) {
+  if (!s.footnotes || s.footnotes.length === 0) continue;
+  const indices: number[] = [];
+  for (const text of s.footnotes) {
+    const n = footnoteList.length + 1;
+    footnoteList.push({ n, text, seriesId: s.id });
+    indices.push(n);
+  }
+  footnoteIndexBySeries.set(s.id, indices);
+}
+
+const offStrike = series.filter((s) => s.fixedAt && s.fixedAt !== strikeAt);
 ---
+
+<p class="strike-line">
+  <span class="mono">Struck {strikeLabel(strikeAt)}</span>
+  <span class="strike-sep"> · </span>
+  <span class="strike-count">{series.length} series</span>
+  {offStrike.length > 0 && (
+    <span class="strike-note">
+      <span class="strike-sep"> · </span>
+      <span>{offStrike.length} off-strike (◦ marker)</span>
+    </span>
+  )}
+</p>
 
 <div class="table-scroll">
   <table class="fixing" aria-label={ariaLabel}>
@@ -53,6 +101,8 @@ function slugify(ticker: string): string {
         series.map((s) => {
           const slug = slugify(s.id);
           const specId = `spec-${slug}`;
+          const noteIndices = footnoteIndexBySeries.get(s.id);
+          const isOffStrike = Boolean(s.fixedAt && s.fixedAt !== strikeAt);
           return (
             <>
               <tr class="chip-row" data-series={s.id} tabindex="0">
@@ -67,7 +117,23 @@ function slugify(ticker: string): string {
                     <span class="name">
                       {s.chipName} · <span class="vram">{s.vram}</span> · {s.tenor}
                     </span>
-                    <span class="tick">{s.id}</span>
+                    <span class="tick">
+                      {s.id}
+                      {isOffStrike && (
+                        <span
+                          class="off-strike"
+                          aria-label="Off-strike fixing — see notes"
+                          title={`Struck at ${s.fixedAt?.slice(11, 16)} UTC, not ${strikeAt.slice(11, 16)} UTC`}
+                        >
+                          {' ◦'}
+                        </span>
+                      )}
+                      {noteIndices && noteIndices.map((n) => (
+                        <sup class="fn-ref">
+                          <a href={`#fn-${slug}-${n}`} id={`fnref-${slug}-${n}`}>{n}</a>
+                        </sup>
+                      ))}
+                    </span>
                   </button>
                 </td>
                 <td class="num">${s.price.toFixed(4)}</td>
@@ -114,3 +180,101 @@ function slugify(ticker: string): string {
     </tbody>
   </table>
 </div>
+
+{footnoteList.length > 0 && (
+  <section class="fixing-notes" aria-label="Notes on this fixing">
+    <div class="fixing-notes-label">Notes on this fixing</div>
+    <ol class="fixing-notes-list">
+      {footnoteList.map((fn) => {
+        const slug = slugify(fn.seriesId);
+        return (
+          <li id={`fn-${slug}-${fn.n}`}>
+            <span class="fn-ticker mono">{fn.seriesId}</span>
+            <span class="fn-sep"> · </span>
+            <span class="fn-body">{fn.text}</span>
+            <a class="fn-back" href={`#fnref-${slug}-${fn.n}`} aria-label={`Return to ${fn.seriesId}`}>↩</a>
+          </li>
+        );
+      })}
+    </ol>
+  </section>
+)}
+
+<style>
+  .strike-line {
+    font-family: var(--ui);
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+    margin: 0 0 10px;
+  }
+  .strike-line .mono { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
+  .strike-line .strike-sep { color: var(--rule-strong, var(--muted)); }
+
+  .off-strike {
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+
+  sup.fn-ref {
+    font-family: var(--mono);
+    font-size: 10px;
+    margin-left: 2px;
+    vertical-align: super;
+    line-height: 0;
+  }
+  sup.fn-ref a {
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--muted);
+  }
+  sup.fn-ref a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  .fixing-notes {
+    margin: 14px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+  }
+  .fixing-notes-label {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .fixing-notes-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    counter-reset: fn;
+  }
+  .fixing-notes-list li {
+    position: relative;
+    padding: 4px 0 4px 28px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    counter-increment: fn;
+  }
+  .fixing-notes-list li::before {
+    content: counter(fn);
+    position: absolute;
+    left: 0;
+    top: 4px;
+    width: 22px;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .fn-ticker { font-size: 12px; color: var(--muted); }
+  .fn-sep { color: var(--muted); }
+  .fn-back {
+    margin-left: 6px;
+    font-family: var(--mono);
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .fn-back:hover { color: var(--ink); }
+</style>

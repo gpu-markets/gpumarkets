@@ -1,0 +1,152 @@
+---
+/**
+ * Citation — BibTeX / APA / plain-text copy blocks for the current fix.
+ * Rendered in preformatted blocks so whitespace survives copy-paste.
+ *
+ * Genre note: mirrors the "Suggested citation" treatment on FRED series
+ * pages and BIS working papers. No copy button (would require client JS
+ * and break the static-site discipline); the user selects and copies.
+ */
+import Eyebrow from './Eyebrow.astro';
+
+export interface Props {
+  /** ISO date of the fix, e.g. "2026-04-18". */
+  fixDate: string;
+  /** UTC time of the fix, e.g. "00:30". */
+  fixTimeUTC?: string;
+  /**
+   * Optional — present only on per-series detail pages (Phase 2).
+   * When supplied, the citation refers to that single series.
+   */
+  seriesId?: string;
+  seriesLabel?: string;
+}
+
+const {
+  fixDate,
+  fixTimeUTC = '00:30',
+  seriesId,
+  seriesLabel,
+} = Astro.props;
+
+const SITE = 'https://gpumarkets.dev';
+
+const [year, month, day] = fixDate.split('-').map(Number);
+const monthName = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+][month - 1];
+
+const bibKey = seriesId
+  ? `gpumarkets_${seriesId.replace(/\./g, '_').toLowerCase()}_${fixDate.replace(/-/g, '_')}`
+  : `gpumarkets_fix_${fixDate.replace(/-/g, '_')}`;
+
+const bibTitle = seriesId && seriesLabel
+  ? `GPU Markets ${seriesLabel} daily fixing, ${fixDate}`
+  : `GPU Markets daily fixing, ${fixDate}`;
+
+const bibUrl = seriesId
+  ? `${SITE}/series/${seriesId.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-')}/${fixDate}`
+  : `${SITE}/`;
+
+const bibtex = `@misc{${bibKey},
+  author       = {{GPU Markets}},
+  title        = {${bibTitle}},
+  year         = {${year}},
+  month        = {${monthName.toLowerCase()}},
+  day          = {${day}},
+  howpublished = {\\url{${bibUrl}}},
+  note         = {Retrieved ${fixDate} ${fixTimeUTC} UTC. Published under CC BY 4.0.}
+}`;
+
+const apa = seriesId && seriesLabel
+  ? `GPU Markets. (${year}, ${monthName} ${day}). GPU Markets ${seriesLabel} daily fixing, ${fixDate} [Data set]. ${bibUrl}`
+  : `GPU Markets. (${year}, ${monthName} ${day}). GPU Markets daily fixing, ${fixDate} [Data set]. ${bibUrl}`;
+
+const plain = seriesId && seriesLabel
+  ? `GPU Markets, ${seriesLabel} fixing, ${fixDate} 00:30 UTC (${bibUrl}). CC BY 4.0.`
+  : `GPU Markets, daily fixing, ${fixDate} ${fixTimeUTC} UTC (${bibUrl}). CC BY 4.0.`;
+---
+
+<section>
+  <div class="wrap">
+    <Eyebrow label="Cite this fixing" />
+    <div class="prose">
+      <p>
+        GPU Markets data is published under
+        <a href="https://creativecommons.org/licenses/by/4.0/" rel="noopener">CC BY 4.0</a> —
+        you may reproduce any fix or research note provided the source is
+        attributed. The suggested formats below preserve the fix date and
+        UTC strike time so a reader can reproduce the exact vintage.
+      </p>
+    </div>
+
+    <div class="cite-stack">
+      <div class="cite-block">
+        <div class="cite-label">BibTeX</div>
+        <pre class="cite-pre"><code>{bibtex}</code></pre>
+      </div>
+
+      <div class="cite-block">
+        <div class="cite-label">APA 7</div>
+        <pre class="cite-pre"><code>{apa}</code></pre>
+      </div>
+
+      <div class="cite-block">
+        <div class="cite-label">Plain text</div>
+        <pre class="cite-pre"><code>{plain}</code></pre>
+      </div>
+    </div>
+
+    <p class="footnote">
+      The suggested citation refers to the <em>headline</em> equal-weight
+      median fix. When citing the capacity-weighted
+      <span class="mono">.cw</span> research series, qualify the series
+      explicitly — e.g. "GPU Markets, H100 SXM spot, capacity-weighted
+      companion, {fixDate}" — since the <span class="mono">.cw</span>
+      companion is a distinct publication and may be suppressed on days
+      the min-sample guard triggers.
+    </p>
+  </div>
+</section>
+
+<style>
+  .cite-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 18px 0 12px;
+  }
+  .cite-block {
+    border: 1px solid var(--rule);
+    background: #f7f3e8;
+  }
+  .cite-label {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--rule);
+    background: #efe9db;
+  }
+  .cite-pre {
+    margin: 0;
+    padding: 12px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-x: auto;
+    user-select: all;
+  }
+  .cite-pre code {
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    padding: 0;
+  }
+</style>

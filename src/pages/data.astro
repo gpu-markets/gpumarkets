@@ -1,11 +1,20 @@
 ---
 /**
- * Data — placeholder for the downloads / API page. Phase 2 will list the
- * latest fixing JSON, historical CSVs, the Parquet archive, and the
- * read-only SQL endpoint, with auto-generated badges per series.
+ * Data — downloads, citation, and references to the machine-readable
+ * surfaces of the fix. The full Phase 2 downloads page (historical CSVs,
+ * Parquet archive, read-only SQL, per-series badges) is still to come,
+ * but the current-day CSV and suggested-citation surface ship in Phase 1.
  */
 import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import Citation from '../components/Citation.astro';
+import { trainingTier, inferenceTier } from '../lib/series-data';
+
+const FIX_DATE = '2026-04-18';
+
+function slugify(ticker: string): string {
+  return ticker.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-');
+}
 ---
 
 <Base title="Data · GPU Markets" currentPage="data">
@@ -21,20 +30,152 @@ import Eyebrow from '../components/Eyebrow.astro';
   </section>
 
   <section>
-    <div class="wrap" id="historical">
-      <Eyebrow label="Coming In Phase 2" />
+    <div class="wrap" id="current">
+      <Eyebrow label="Current fixing · flat CSV" />
       <div class="prose">
         <p>
-          The data downloads page will list the latest fixing JSON,
-          end‑of‑day CSVs going back to first observation, the
-          Parquet archive of raw observations, and shields‑style
-          badges per series for embedding in dashboards and slide decks.
+          The full set of today's fixings — both tiers, all series, with
+          deltas, observation counts, venue breadth, and the
+          capacity-weighted companion where present — is available as a
+          single RFC‑4180 CSV. Updated with each daily release at
+          00:30 UTC.
+        </p>
+        <ul>
+          <li>
+            <a class="mono" href="/data/fixings.csv">/data/fixings.csv</a> —
+            all series, current fix. <span class="mono">Content-Type: text/csv</span>,
+            <span class="mono">Content-Disposition: inline</span>.
+            Parses directly in pandas, Excel, and any language's CSV
+            reader.
+          </li>
+        </ul>
+        <p>
+          Column definitions and units are specified in the
+          <a href="/methodology">methodology</a> — the CSV header uses
+          snake‑case field names keyed to the same glossary terms used
+          on the fixing table.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap" id="per-series">
+      <Eyebrow label="Per-series CSV · stable URLs" />
+      <div class="prose">
+        <p>
+          One URL per series, permanently. The Phase 1 body contains the
+          current fix; Phase 2 will fatten each response to the full
+          history back to first observation without changing the URL
+          shape — link to these today and they will still resolve (with
+          more rows) in the next release.
+        </p>
+      </div>
+
+      <div class="per-series-grid">
+        <div class="per-series-col">
+          <div class="per-series-heading">Training tier</div>
+          <ul class="per-series-list">
+            {trainingTier.map((s) => (
+              <li>
+                <a class="mono" href={`/data/series/${slugify(s.id)}.csv`}>
+                  /data/series/{slugify(s.id)}.csv
+                </a>
+                <span class="per-series-label"> · {s.label ?? s.id}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="per-series-col">
+          <div class="per-series-heading">Inference tier</div>
+          <ul class="per-series-list">
+            {inferenceTier.map((s) => (
+              <li>
+                <a class="mono" href={`/data/series/${slugify(s.id)}.csv`}>
+                  /data/series/{slugify(s.id)}.csv
+                </a>
+                <span class="per-series-label"> · {s.label ?? s.id}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <p class="footnote">
+        Slugs are derived from the series ticker by stripping the
+        <span class="mono">GPUM.</span> prefix, lowercasing, and
+        replacing <span class="mono">.</span> with <span class="mono">-</span>.
+        Tickers and slugs are stable — a chip name being rebranded does
+        not renumber the ticker, so a citation of
+        <span class="mono">/data/series/h100-sxm-spot.csv</span> from
+        2026 will still resolve to H100 SXM spot in 2035.
+      </p>
+    </div>
+  </section>
+
+  <Citation fixDate={FIX_DATE} />
+
+  <style>
+    .per-series-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 18px 0 12px;
+    }
+    @media (max-width: 640px) {
+      .per-series-grid { grid-template-columns: 1fr; }
+    }
+    .per-series-heading {
+      font-family: var(--ui);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .per-series-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .per-series-list li {
+      padding: 3px 0;
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+    .per-series-list a.mono {
+      font-size: 12.5px;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--rule);
+    }
+    .per-series-list a.mono:hover {
+      border-bottom-color: var(--ink);
+    }
+    .per-series-label {
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+  </style>
+
+  <section>
+    <div class="wrap" id="historical">
+      <Eyebrow label="Coming in Phase 2" />
+      <div class="prose">
+        <p>
+          End‑of‑day CSVs going back to first observation, the Parquet
+          archive of raw observations, shields‑style badges per series
+          for embedding in dashboards and slide decks, and the read‑only
+          SQL endpoint land in Phase 2.
         </p>
         <p>
           Until then, every fix and every input observation is committed
           to the
           <a href="https://github.com/gpu-markets/gpu-markets" rel="noopener">project repository</a>
-          under <code>data/</code>.
+          under <code>data/</code>, with one commit per fix and the
+          collector script that produced it in the same commit.
         </p>
       </div>
     </div>

@@ -73,6 +73,98 @@ import Eyebrow from '../components/Eyebrow.astro';
 
   <section>
     <div class="wrap">
+      <Eyebrow label="Fixing calendar · strike time · holidays" />
+      <div class="prose">
+        <p>
+          The nominal strike time is <strong>00:30 UTC, every day</strong> —
+          weekends included. The GPU rental market is a 24/7 venue
+          environment: venue APIs do not observe bank holidays, and neither
+          does the fix. A Saturday fix and a Tuesday fix are produced by
+          the same collector, on the same cadence, from the same venue
+          set. Treating weekends as trading days is a deliberate break
+          from equity‑style conventions (Fed H.15, LSE closing prices)
+          and a match to the FX and crypto conventions that share the
+          24/7 property.
+        </p>
+        <p>
+          Venue‑side holidays — e.g. a hyperscaler's maintenance window,
+          a regional AWS outage, or a collector‑side deploy — are handled
+          as <em>per‑venue</em> events, not as <em>per‑fix</em> events.
+          The estimator operates on whichever eligible venues returned
+          observations in the 10‑minute window preceding the strike.
+          Minimum‑coverage guards kick in when too few venues respond:
+          the headline fix is suppressed (rather than silently published
+          from a thin panel) when fewer than three eligible venues
+          contribute surviving observations after outlier rejection.
+          The suppressed day's row carries the reason in place of a
+          price; the previous day's fix is <strong>not</strong>
+          substituted as a fallback.
+        </p>
+        <p>
+          Individual series may occasionally strike off‑schedule when
+          an API outage delays a key venue past 00:30 UTC. An
+          off‑strike row is marked with
+          <span class="mono">◦</span> next to its ticker, carries its
+          actual strike time in the per‑series metadata, and is
+          footnoted with the specific cause. Deltas on an off‑strike
+          row compare to the previous day's on‑strike fix for the same
+          series — not to the same‑day 00:30 UTC fix, which does not
+          exist for that series.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Revision & vintage policy" />
+      <div class="prose">
+        <p>
+          Every published fix is <strong>provisional for 24 hours</strong>.
+          During that window the estimator may re‑run if a venue backfills
+          late observations, if a collector bug is found and patched, or
+          if an outlier rejection is reviewed and reversed. After 24 hours
+          the fix is locked and becomes part of the <em>final vintage</em>.
+          Final‑vintage fixes are not silently edited. If a material
+          correction is warranted — e.g. a collector was double‑counting
+          a venue for a week — the correction is published as a named
+          <strong>revision event</strong>, committed to the data repo with
+          its own commit message, linked from the methodology changelog,
+          and reflected in the site's news feed.
+        </p>
+        <p>
+          Provisional fixes carry a <span class="mono">vintage: provisional</span>
+          field in the raw‑observation JSON and in the
+          <a href="/data/fixings.csv">flat CSV</a>. Final fixes carry
+          <span class="mono">vintage: final</span>. A third value,
+          <span class="mono">vintage: revised</span>, applies to any fix
+          corrected after lock — revised rows carry both the revised price
+          and a reference to the original provisional price under
+          <span class="mono">price_original</span>, so readers can
+          reconstruct either surface.
+        </p>
+        <p>
+          The distinction matters for any downstream analysis that cites
+          a specific fix date. A research note citing "H100 SXM spot on
+          2026‑04‑18" should specify which vintage — provisional,
+          final, or revised — the claim rests on, and link to the commit
+          hash of the data repo at citation time. The
+          <a href="/data#current">suggested citation block</a>
+          includes the retrieval timestamp for exactly this reason.
+        </p>
+        <p>
+          Phase 2 will add a vintage cursor to each per‑series page —
+          readers will be able to replay "what did the 2026‑04‑18 fix
+          say as of 2026‑04‑19" independently of what the same fix reads
+          today. Until that ships, the data repo's git log is the
+          authoritative record of vintage transitions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
       <Eyebrow label="Research series · capacity-weighted companion" />
       <div class="prose">
         <p>

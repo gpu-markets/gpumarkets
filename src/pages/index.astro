@@ -36,6 +36,8 @@ import Research from '../components/Research.astro';
 import News from '../components/News.astro';
 import { trainingTier, inferenceTier } from '../lib/series-data';
 
+const STRIKE_AT = '2026-04-18T00:30:00Z';
+
 const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
   {
     label: 'Largest Decline · 7d',
@@ -80,7 +82,7 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
   <section>
     <div class="wrap">
       <Eyebrow number="01" label="Training Tier · Latest Fixing" aside="8 series" />
-      <FixingTable series={trainingTier} ariaLabel="Training-tier fixings" />
+      <FixingTable series={trainingTier} ariaLabel="Training-tier fixings" strikeAt={STRIKE_AT} />
       <p class="footnote">
         Fixings quoted as <span class="mono">USD per GPU‑hour</span>,
         rounded to four decimal places. Δ columns show percentage change
@@ -98,7 +100,7 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
   <section>
     <div class="wrap">
       <Eyebrow number="02" label="Inference Tier · Latest Fixing" aside="5 series" />
-      <FixingTable series={inferenceTier} ariaLabel="Inference-tier fixings" />
+      <FixingTable series={inferenceTier} ariaLabel="Inference-tier fixings" strikeAt={STRIKE_AT} />
       <p class="footnote">
         Inference‑tier series are priced the same way as training
         series, but include consumer and workstation cards (RTX 4090, RTX

@@ -28,6 +28,43 @@ const {
 const SITE_URL = 'https://gpumarkets.dev';
 const canonical = new URL(Astro.url.pathname, SITE_URL).toString();
 const ogImage = `${SITE_URL}/og.png`;
+
+/**
+ * Build provenance — site commit, data-repo commit, and build time are
+ * inlined into the footer so any published figure can be traced back to
+ * the code + data that produced it.
+ *
+ *   Site SHA fallback chain:
+ *     CF_PAGES_COMMIT_SHA    — auto-injected by Cloudflare Workers/Pages
+ *     WORKERS_CI_COMMIT_SHA  — Workers Builds newer var (both are set)
+ *     SITE_COMMIT_SHA        — manual override (local reproducible builds)
+ *     → 'dev'
+ *
+ *   Data-repo SHA fallback chain:
+ *     DATA_REPO_SHA          — injected by scripts/build.sh, fetched from
+ *                              the GitHub API for gpu-markets/gpu-markets
+ *     snapshotSha            — Phase 1 fixture provenance, declared
+ *                              alongside the fixture itself
+ *     → 'dev'
+ *
+ * snapshotSha is imported rather than read from env because it's a
+ * claim about the source data, not about the build environment.
+ */
+import { snapshotSha } from '../lib/series-data';
+
+declare const process: { env: Record<string, string | undefined> };
+const siteShaRaw =
+  process.env.CF_PAGES_COMMIT_SHA ||
+  process.env.WORKERS_CI_COMMIT_SHA ||
+  process.env.SITE_COMMIT_SHA ||
+  'dev';
+const dataShaRaw =
+  process.env.DATA_REPO_SHA ||
+  (snapshotSha !== '0000000000000000000000000000000000000000' ? snapshotSha : '') ||
+  'dev';
+const siteSha = siteShaRaw.slice(0, 7);
+const dataSha = dataShaRaw.slice(0, 7);
+const builtAt = new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
 ---
 
 <!doctype html>
@@ -178,7 +215,12 @@ const ogImage = `${SITE_URL}/og.png`;
         </div>
         <div class="bottom">
           <span>© 2026 GPU Markets · Published under CC BY 4.0 · Not investment advice</span>
-          <span>gpumarkets.dev</span>
+          <span
+            class="mono build-prov"
+            title="Site commit · data-repo commit · build time (UTC). Every figure on this page is reproducible from these three values."
+          >
+            site {siteSha} · data {dataSha} · built {builtAt}
+          </span>
         </div>
       </div>
     </footer>

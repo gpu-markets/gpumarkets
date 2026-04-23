@@ -5,12 +5,28 @@ import type { Series } from './types';
  * In Phase 2 this becomes a daily JSON fetched from the data repo.
  */
 
+/**
+ * Provenance — the commit hash of gpu-markets/gpu-markets from which
+ * this Phase 1 fixture snapshot was copied. Surfaces in the site
+ * footer (see src/layouts/Base.astro) so every published figure is
+ * traceable back to an exact revision of the data repo.
+ *
+ * Update this value whenever the fixture is re-synced. In Phase 2
+ * this constant becomes irrelevant — Base.astro will prefer the
+ * DATA_REPO_SHA env var injected by CI, which points to the live
+ * data-repo HEAD at build time.
+ */
+export const snapshotSha = '0000000000000000000000000000000000000000';
+
 export const trainingTier: Series[] = [
   { id: 'GPUM.H100.SXM.SPOT', tier: 'training', chipName: 'NVIDIA H100 SXM', vram: '80GB', tenor: 'Spot',
     price: 2.1432, delta1d: -0.78, delta7d: -0.99, delta30d: -7.72, obs: 2847, venueCount: '9/12',
     sparkPath: 'M0,5 L4,6 L8,5 L12,7 L16,8 L20,7 L24,9 L28,8 L32,10 L36,11 L40,10 L44,12 L48,11 L52,13 L56,12 L60,13 L64,14 L68,13 L72,14 L76,15 L80,15',
     label: 'H100 SXM Spot',
     priceCW: 2.1687, deltaCWvsFix: 1.19, venueTierBreakdown: '2 T1 · 4 T2 · 1 T3',
+    footnotes: [
+      'Hyperbolic observation excluded from today\u2019s fix: residual > 2.8 MAD vs. the surviving-venue median. Venue remains Eligible; rejection applies to this fix only.',
+    ],
     specs: [['Architecture','Hopper'],['Memory','80GB HBM3'],['Bandwidth','3.35 TB/s'],['FP16 tensor','1,979 TFLOPS'],['FP8 tensor','3,958 TFLOPS'],['NVLink','900 GB/s'],['TDP','700W'],['Launched','Q1 2023']] },
   { id: 'GPUM.H100.SXM.OD', tier: 'training', chipName: 'NVIDIA H100 SXM', vram: '80GB', tenor: 'On-demand',
     price: 2.8714, delta1d: -0.14, delta7d: -0.71, delta30d: -0.72, obs: 1204, venueCount: '8/12',
@@ -53,6 +69,10 @@ export const trainingTier: Series[] = [
     sparkPath: 'M0,5 L4,6 L8,7 L12,6 L16,8 L20,9 L24,8 L28,10 L32,9 L36,11 L40,10 L44,12 L48,11 L52,13 L56,12 L60,13 L64,14 L68,13 L72,14 L76,15 L80,14',
     label: 'MI300X Spot',
     suppressedCW: 'insufficient tier coverage (all 4 surviving venues in T2)',
+    fixedAt: '2026-04-18T06:45:00Z',
+    footnotes: [
+      'Off-strike backfill. TensorDock API returned 5xx on the 00:30 UTC poll; this row was struck at 06:45 UTC from the same day\u2019s observations once the venue became reachable. Δ columns compare to the 00:30 UTC fix from 2026\u201104\u201117.',
+    ],
     specs: [['Architecture','CDNA 3'],['Memory','192GB HBM3'],['Bandwidth','5.3 TB/s'],['FP16','1,307 TFLOPS'],['FP8','2,615 TFLOPS'],['Infinity Fabric','896 GB/s'],['TDP','750W'],['Launched','Q4 2023']] },
 ];
 

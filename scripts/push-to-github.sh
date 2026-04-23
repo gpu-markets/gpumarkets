@@ -52,7 +52,7 @@ git commit -m "Phase 1 — Astro port of GPU Markets site
 Landing page composed of 11 sections, 4 Phase-2 stub pages,
 shared design system in public/shared.css (934 lines extracted
 verbatim), vanilla-JS hero chart + row-toggle, and a README
-covering local dev, design constraints, and Cloudflare Pages
+covering local dev, design constraints, and Cloudflare deployment
 deployment settings.
 
 Stack: Astro 5 (static output), TypeScript strict, no CSS
@@ -89,7 +89,7 @@ git push -u origin main
 
 echo "[6/6] Done."
 echo
-echo "Next: connect this repo to Cloudflare Pages."
+echo "Next: connect this repo to Cloudflare Workers Builds."
 echo "  Build command:  npm run build"
 echo "  Build output:   dist"
 echo "  Node version:   20.x"

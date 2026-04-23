@@ -26,21 +26,30 @@ interface VenueRow {
    * hyphens.
    */
   firstObs: string;
+  /**
+   * Observations contributed to the estimator in the last 30 days —
+   * across all series, after outlier rejection. A "data depth" signal:
+   * a venue with 2,400 surviving obs has more bearing on the fix than
+   * one with 200, even if both sit in the same Eligible tier.
+   * Reference venues (hyperscalers) are posted alongside but excluded
+   * from the estimator, so their `obs30d` is `null`.
+   */
+  obs30d: number | null;
 }
 
 const rows: VenueRow[] = [
-  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑14' },
-  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',                                                     access: 'GraphQL API',           status: 'yes',   firstObs: '2026‑02‑14' },
-  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud',                                            access: 'HTML',                  status: 'yes',   firstObs: '2026‑02‑14' },
-  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',                                                      access: 'HTML + CLI',            status: 'yes',   firstObs: '2026‑02‑17' },
-  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑17' },
-  { name: 'TensorDock',      url: 'https://www.tensordock.com/',                                                         access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18' },
-  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                                                              access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18' },
-  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                                                             access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑21' },
-  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',                                                           access: 'Aggregator',            status: 'cross', firstObs: '2026‑02‑21' },
-  { name: 'AWS (p5 family)', url: 'https://aws.amazon.com/ec2/instance-types/p5/',                                       access: 'Official Pricing API',  status: 'ref',   firstObs: '2026‑02‑14' },
-  { name: 'GCP (A3 family)', url: 'https://cloud.google.com/compute/docs/accelerator-optimized-machines',                access: 'Cloud Billing API',     status: 'ref',   firstObs: '2026‑02‑14' },
-  { name: 'Azure (ND v5)',   url: 'https://learn.microsoft.com/en-us/azure/virtual-machines/nd-h100-v5-series',          access: 'Retail Prices API',     status: 'ref',   firstObs: '2026‑02‑14' },
+  { name: 'Vast.ai',         url: 'https://cloud.vast.ai/create/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑14', obs30d: 3184 },
+  { name: 'RunPod',          url: 'https://www.runpod.io/gpu-cloud',                                                     access: 'GraphQL API',           status: 'yes',   firstObs: '2026‑02‑14', obs30d: 2947 },
+  { name: 'Lambda Labs',     url: 'https://lambdalabs.com/service/gpu-cloud',                                            access: 'HTML',                  status: 'yes',   firstObs: '2026‑02‑14', obs30d: 1862 },
+  { name: 'Prime Intellect', url: 'https://www.primeintellect.ai/',                                                      access: 'HTML + CLI',            status: 'yes',   firstObs: '2026‑02‑17', obs30d: 1421 },
+  { name: 'Hyperstack',      url: 'https://www.hyperstack.cloud/',                                                       access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑17', obs30d: 1308 },
+  { name: 'TensorDock',      url: 'https://www.tensordock.com/',                                                         access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18', obs30d: 1154 },
+  { name: 'DataCrunch',      url: 'https://datacrunch.io/',                                                              access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑18', obs30d:  982 },
+  { name: 'Hyperbolic',      url: 'https://hyperbolic.xyz/',                                                             access: 'REST API',              status: 'yes',   firstObs: '2026‑02‑21', obs30d:  847 },
+  { name: 'Shadeform',       url: 'https://www.shadeform.ai/',                                                           access: 'Aggregator',            status: 'cross', firstObs: '2026‑02‑21', obs30d:  612 },
+  { name: 'AWS (p5 family)', url: 'https://aws.amazon.com/ec2/instance-types/p5/',                                       access: 'Official Pricing API',  status: 'ref',   firstObs: '2026‑02‑14', obs30d: null },
+  { name: 'GCP (A3 family)', url: 'https://cloud.google.com/compute/docs/accelerator-optimized-machines',                access: 'Cloud Billing API',     status: 'ref',   firstObs: '2026‑02‑14', obs30d: null },
+  { name: 'Azure (ND v5)',   url: 'https://learn.microsoft.com/en-us/azure/virtual-machines/nd-h100-v5-series',          access: 'Retail Prices API',     status: 'ref',   firstObs: '2026‑02‑14', obs30d: null },
 ];
 
 const tagLabel: Record<VenueStatus, string> = {
@@ -61,6 +70,7 @@ const tagLabel: Record<VenueStatus, string> = {
             <th scope="col">Access</th>
             <th scope="col">Eligible</th>
             <th scope="col" class="num">Pipeline since</th>
+            <th scope="col" class="num" title="Surviving observations contributed to the estimator over the last 30 days">n · 30d</th>
           </tr>
         </thead>
         <tbody>
@@ -75,6 +85,7 @@ const tagLabel: Record<VenueStatus, string> = {
                 <td>{r.access}</td>
                 <td><span class={`tag ${r.status}`}>{tagLabel[r.status]}</span></td>
                 <td class="num">{r.firstObs}</td>
+                <td class="num">{r.obs30d === null ? '—' : r.obs30d.toLocaleString('en-US')}</td>
               </tr>
             ))
           }
@@ -85,12 +96,19 @@ const tagLabel: Record<VenueStatus, string> = {
       Eligibility is a property of the observation pipeline, not a quality
       judgement. Hyperscaler list prices are posted alongside as a
       <span class="mono">Reference</span> series but excluded from the
-      trimmed‑mean estimator. The <span class="mono">Pipeline since</span>
-      column records the date live observation began for each venue; the
-      hero chart's 180‑day series extends earlier via backfill from
-      venue‑published rate‑card archives and public snapshots, so
-      chart history predates pipeline start by design. Per‑venue terms
-      of service, scrape cadence, and the latest eligibility review date
+      trimmed‑mean estimator — their <span class="mono">n · 30d</span>
+      column therefore shows <span class="mono">—</span>. The
+      <span class="mono">Pipeline since</span> column records the date
+      live observation began for each venue; the hero chart's 180‑day
+      series extends earlier via backfill from venue‑published rate‑card
+      archives and public snapshots, so chart history predates pipeline
+      start by design. The <span class="mono">n · 30d</span> column is
+      the count of individual observations from each venue that survived
+      outlier rejection over the last thirty strike windows, aggregated
+      across all series — a coarse depth signal: venues with higher
+      <span class="mono">n</span> have more bearing on the fix, even
+      when two sit in the same Eligible tier. Per‑venue terms of
+      service, scrape cadence, and the latest eligibility review date
       are available on the <a class="vlink" href="/venues">venues directory</a>.
     </p>
   </div>

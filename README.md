@@ -1,12 +1,12 @@
 # GPU Markets — site
 
-The public site for **GPU Markets**, an open reference price index for the GPU rental market. Daily fixings for spot, on-demand, and reserved GPU rentals across 12 venues. Open data, open methodology, published every weekday at 00:30 UTC.
+The public site for **GPU Markets**, an open reference price index for the GPU rental market. Daily fixings for spot, on-demand, and reserved GPU rentals across 12 venues. Open data, open methodology, published every day at 00:30 UTC.
 
 Production: <https://gpumarkets.dev>
 
 ## What this repository is
 
-This is the Astro source for the marketing / research site only. It compiles to a fully static bundle and ships to Cloudflare Pages.
+This is the Astro source for the marketing / research site only. It compiles to a fully static bundle and ships through Cloudflare Workers Builds.
 
 The actual fixings, raw observations, and estimator code live in the separate `gpu-markets/gpu-markets` repository. In Phase 1 the site reads from a snapshot of that data hard-coded into `src/lib/series-data.ts`; in Phase 2 it will read from a content collection populated at build time from the data repo.
 
@@ -35,7 +35,7 @@ Astro's dev server has fast HMR for `.astro` components but does **not** watch f
 
 ```
 gpu-markets-site/
-├── astro.config.mjs       # static output, Cloudflare Pages compatible
+├── astro.config.mjs       # static output, Cloudflare-compatible
 ├── package.json
 ├── tsconfig.json
 ├── public/
@@ -78,7 +78,7 @@ The aesthetic is locked. It is a financial-publication / statistical-release loo
 
 ## Deployment
 
-Cloudflare Pages, building from `main`:
+Cloudflare Workers Builds, deploying worker `gpumarketsdev` from `main`:
 
 | Setting | Value |
 | --- | --- |
@@ -87,7 +87,7 @@ Cloudflare Pages, building from `main`:
 | Node version | 20.x |
 | Custom domain | `gpumarkets.dev` |
 
-CI (`.github/workflows/ci.yml`) runs `npm run check` (Astro check + TypeScript) and `npm run build` on every pull request and every push to `main`. Cloudflare Pages auto-deploys successful builds on `main`.
+CI (`.github/workflows/ci.yml`) runs `npm run check` (Astro check + TypeScript) and `npm run build` on every pull request and every push to `main`. Cloudflare Workers Builds auto-deploys successful pushes to `main`.
 
 ## Phase 2 roadmap
 
