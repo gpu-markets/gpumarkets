@@ -1,0 +1,31 @@
+---
+import { getGlossaryTerm, type GlossaryTermId } from '../lib/glossary-terms';
+
+export interface Props {
+  termId: GlossaryTermId;
+  instanceId: string;
+  label?: string;
+}
+
+const { termId, instanceId, label } = Astro.props;
+const term = getGlossaryTerm(termId);
+const triggerLabel = label ?? term.label;
+const popoverId = `term-help-${instanceId}`;
+---
+
+<span class="term-help" data-term-help>
+  <button
+    type="button"
+    class="term-help-trigger"
+    aria-expanded="false"
+    aria-controls={popoverId}
+    data-term-trigger
+    data-term-id={termId}
+  >
+    {triggerLabel}
+  </button>
+  <span class="term-help-popover" id={popoverId} role="tooltip" hidden data-term-popover>
+    <span class="term-help-kicker">{term.label}</span>
+    <span class="term-help-body">{term.description}</span>
+  </span>
+</span>

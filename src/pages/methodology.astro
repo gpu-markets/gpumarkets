@@ -6,6 +6,7 @@
  */
 import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
+import GlossaryTerm from '../components/GlossaryTerm.astro';
 ---
 
 <Base title="Methodology · GPU Markets" currentPage="methodology">
@@ -169,11 +170,15 @@ import Eyebrow from '../components/Eyebrow.astro';
       <div class="prose">
         <p>
           Alongside the headline fix, each training-tier series publishes a
-          capacity-weighted companion — <span class="mono">.cw</span> — as
+          capacity-weighted companion —
+          <GlossaryTerm termId="cw" instanceId="methodology-cw" label=".cw" /> —
+          as
           a research series. The companion is a weighted median of the same
           surviving observations, with weights assigned by venue capacity
-          tier: 3 for T1 venues (over 10,000 GPUs), 2 for T2 (1,000–10,000),
-          1 for T3 (under 1,000). Tier assignments are coarse by design —
+          tier: 3 for <GlossaryTerm termId="t1" instanceId="methodology-t1" />
+          venues (over 10,000 GPUs), 2 for <GlossaryTerm termId="t2" instanceId="methodology-t2" />
+          (1,000–10,000), 1 for <GlossaryTerm termId="t3" instanceId="methodology-t3" />
+          (under 1,000). Tier assignments are coarse by design —
           disagreement over whether a venue operates 8,000 or 12,000 GPUs
           does not change a tier, so weights do not depend on privately
           estimated capacities. The current assignment, with a per-venue
@@ -183,7 +188,7 @@ import Eyebrow from '../components/Eyebrow.astro';
           alongside MAD threshold changes in the methodology changelog.
         </p>
         <p>
-          The <span class="mono">.cw</span> fix is suppressed when fewer
+          The <GlossaryTerm termId="cw" instanceId="methodology-cw-suppressed" label=".cw" /> fix is suppressed when fewer
           than two venues survive outlier rejection or when surviving
           venues span fewer than two capacity tiers. On suppressed days the
           row carries a reason in place of a price; the headline fix is not
@@ -191,7 +196,7 @@ import Eyebrow from '../components/Eyebrow.astro';
         </p>
         <p>
           The headline fix remains the equal-weight median. The
-          <span class="mono">.cw</span> series is a research publication,
+          <GlossaryTerm termId="cw" instanceId="methodology-cw-series" label=".cw" /> series is a research publication,
           not a member of the fix family — its purpose is to offer an
           auditable supply-weighted reference without introducing weighting
           into the headline benchmark.

@@ -1,5 +1,6 @@
 ---
 import type { Series } from '../lib/types';
+import GlossaryTerm from './GlossaryTerm.astro';
 
 /**
  * Capacity-weighted companion row (.cw research series). Rendered
@@ -24,6 +25,18 @@ const hasCW =
   typeof series.deltaCWvsFix === 'number';
 const suppressed = series.suppressedCW;
 const show = hasCW || !!suppressed;
+type TierTermId = 't1' | 't2' | 't3';
+type TierBreakdownItem = { count: string; tier: string; termId: TierTermId };
+const tierItems: TierBreakdownItem[] = (series.venueTierBreakdown ?? '')
+  .split(' · ')
+  .map((part) => {
+    const [count, tier] = part.split(' ');
+    if (!count || !tier) return null;
+    const termId = tier.toLowerCase();
+    if (termId !== 't1' && termId !== 't2' && termId !== 't3') return null;
+    return { count, tier, termId };
+  })
+  .filter((item): item is TierBreakdownItem => item !== null);
 
 function pctClass(v: number): 'pos' | 'neg' | 'zero' {
   if (v > 0) return 'pos';
@@ -38,29 +51,45 @@ function pctSign(v: number): string {
 ---
 
 {show && (
-  <tr class="cw-row" aria-label={`${series.id} capacity-weighted companion`}>
+  <tr class="cw-row" data-series={series.id} aria-label={`${series.id} capacity-weighted companion`}>
     <td colspan="8">
-      <span class="mono mute">cw</span>
-      {' · '}
-      {hasCW ? (
-        <>
-          <span class="mono">${series.priceCW!.toFixed(4)}</span>
-          {' · '}
-          <span class={`pct ${pctClass(series.deltaCWvsFix!)}`}>
-            <span class="sign">{pctSign(series.deltaCWvsFix!)}</span>
-            {Math.abs(series.deltaCWvsFix!).toFixed(2)}%
-          </span>
-          <span class="mute">{' vs fix'}</span>
-          {series.venueTierBreakdown && (
+      <div class="cw-body">
+        <span class="cw-main">
+          <GlossaryTerm termId="cw" instanceId={`${series.id}-cw`} label="cw" />
+          <span class="cw-sep">·</span>
+          {hasCW ? (
             <>
-              {'\u2003'}
-              <span class="mute mono">{series.venueTierBreakdown}</span>
+              <span class="mono cw-price">${series.priceCW!.toFixed(4)}</span>
+              <span class="cw-sep">·</span>
+              <span class={`pct ${pctClass(series.deltaCWvsFix!)} cw-delta`}>
+                <span class="sign">{pctSign(series.deltaCWvsFix!)}</span>
+                {Math.abs(series.deltaCWvsFix!).toFixed(2)}%
+              </span>
+              <span class="cw-context">vs fix</span>
             </>
+          ) : (
+            <span class="cw-context">suppressed · {suppressed}</span>
           )}
-        </>
-      ) : (
-        <span class="mute">suppressed · {suppressed}</span>
-      )}
+        </span>
+
+        {hasCW && tierItems.length > 0 && (
+          <span class="cw-breakdown">
+            {tierItems.map((item, index) => (
+              <>
+                {index > 0 && <span class="cw-break-sep">·</span>}
+                <span class="cw-breakdown-item">
+                  <span class="mono">{item.count}</span>{' '}
+                  <GlossaryTerm
+                    termId={item.termId}
+                    instanceId={`${series.id}-${item.termId}`}
+                    label={item.tier}
+                  />
+                </span>
+              </>
+            ))}
+          </span>
+        )}
+      </div>
     </td>
   </tr>
 )}

@@ -285,7 +285,11 @@ h2 {
 }
 
 /* ---------- Tables ---------- */
-.table-scroll { overflow-x: auto; }
+.table-scroll {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: clip;
+}
 
 table.fixing, table.venues, table.constituents {
   width: 100%;
@@ -293,6 +297,15 @@ table.fixing, table.venues, table.constituents {
   font-family: var(--serif);
   font-size: 15px;
   border-top: 1px solid var(--ink);
+}
+table.fixing {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+table.fixing thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
 }
 
 table.fixing th, table.venues th, table.constituents th {
@@ -306,6 +319,13 @@ table.fixing th, table.venues th, table.constituents th {
   padding: 7px 14px 7px 0;
   border-bottom: 1px solid var(--ink);
   white-space: nowrap;
+}
+table.fixing th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(247, 244, 237, 0.98);
+  box-shadow: inset 0 -1px 0 var(--ink);
 }
 table.fixing th.num, table.venues th.num, table.constituents th.num { text-align: right; padding-right: 0; padding-left: 14px; }
 
@@ -347,7 +367,7 @@ table.fixing td.num, table.venues td.num, table.constituents td.num {
   margin-top: 2px;
   font-family: var(--mono);
   font-size: 10.5px;
-  color: var(--muted);
+  color: #5b5547;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -360,8 +380,20 @@ td.pct .sign {
   text-align: left;
 }
 
-.spark { display: inline-block; vertical-align: middle; }
+.spark { display: inline-block; vertical-align: middle; overflow: visible; }
+.spark-baseline {
+  fill: none;
+  stroke: var(--rule);
+  stroke-width: 0.8;
+  stroke-dasharray: 1.5 2.5;
+}
 .spark path { fill: none; stroke: var(--ink); stroke-width: 1; }
+.spark-end {
+  fill: var(--ink);
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.chip-row.active .spark-end { opacity: 1; }
 
 td.pos { color: var(--pos); }
 td.neg { color: var(--neg); }
@@ -376,6 +408,8 @@ td.zero { color: var(--ink); }
   max-width: 90ch;
 }
 .footnote .mono { font-family: var(--mono); font-style: normal; font-size: 12.5px; }
+.fixing-footnote { color: #555042; }
+.fixing-footnote .mono { color: var(--ink); }
 
 /* ---------- Prose ---------- */
 .prose { max-width: 68ch; }
@@ -716,7 +750,17 @@ a { color: var(--link); }
 @media (max-width: 560px) {
   .table-scroll { margin: 0 -20px; padding: 0 20px; }
   table.fixing, table.venues, table.constituents { min-width: 640px; }
+  .cw-body {
+    padding-left: 34px;
+    margin-left: 10px;
+  }
   footer .cols { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+  table.fixing { min-width: 560px; }
+  table.fixing th:nth-child(8),
+  table.fixing td:nth-child(8) { display: none; }
 }
 
 @media print {
@@ -784,10 +828,46 @@ a { color: var(--link); }
   fill: var(--ink);
   text-anchor: start;
 }
+.price-chart:focus-visible {
+  outline: 1px dotted var(--ink);
+  outline-offset: 4px;
+}
+.price-chart .chart-hit-area {
+  pointer-events: all;
+  cursor: crosshair;
+}
 .price-chart .annotations circle {
   fill: var(--ink);
   stroke: var(--bg);
   stroke-width: 1.5;
+}
+.price-chart .tooltip-line {
+  stroke: #5b5445;
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+}
+.price-chart .tooltip-point {
+  fill: var(--ink);
+  stroke: var(--bg);
+  stroke-width: 1.25;
+}
+.price-chart .tooltip-bg {
+  fill: #f5f0e4;
+  stroke: var(--ink);
+  stroke-width: 1;
+}
+.price-chart .tooltip-date,
+.price-chart .tooltip-price {
+  font-family: var(--mono);
+  font-size: 10px;
+  fill: var(--ink);
+}
+.price-chart .tooltip-date {
+  letter-spacing: 0.05em;
+}
+.price-chart .tooltip-price {
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 .price-chart .anno-leader {
   stroke: var(--muted);
@@ -894,6 +974,135 @@ a { color: var(--link); }
 /* Active series row (drives hero chart) */
 .chip-row.active .row-toggle { box-shadow: inset 1px 0 0 var(--ink); }
 .chip-row { cursor: pointer; }
+
+.cw-row td {
+  padding: 0 !important;
+  background: #f1ede2;
+  border-bottom: 1px solid var(--rule) !important;
+}
+.cw-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 7px 0 8px 44px;
+  margin-left: 14px;
+  border-left: 1px solid #d8d0be;
+}
+.cw-main,
+.cw-breakdown {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+.cw-main {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #4f4a3c;
+}
+.cw-price,
+.cw-delta {
+  font-size: 12px;
+}
+.cw-context {
+  color: #6a6455;
+  font-size: 11.5px;
+}
+.cw-sep,
+.cw-break-sep {
+  color: #8b826f;
+}
+.cw-breakdown {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: #5a5446;
+}
+.cw-breakdown-item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.chip-row.active + .cw-row td { background: #eee7d9; }
+.chip-row.active + .cw-row .cw-body { border-left-color: var(--ink); }
+
+.term-help {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+.term-help-trigger {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  padding: 0;
+  margin: 0;
+  cursor: help;
+  border-bottom: 1px dotted currentColor;
+  line-height: inherit;
+}
+.term-help-trigger:hover,
+.term-help-trigger:focus-visible,
+.term-help-trigger[aria-expanded="true"] {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.term-help-trigger:focus-visible {
+  outline: 1px dotted var(--ink);
+  outline-offset: 2px;
+}
+.term-help-popover {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 12;
+  min-width: 220px;
+  max-width: 280px;
+  padding: 10px 12px;
+  border: 1px solid var(--ink);
+  background: #f5f0e4;
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 2px 2px 0 rgba(26, 26, 26, 0.06);
+}
+.term-help-kicker {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a5446;
+}
+.term-help-body {
+  font-family: var(--serif);
+  font-size: 13px;
+  line-height: 1.45;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.fixing-sticky-shell {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  pointer-events: none;
+  display: none;
+}
+.fixing-sticky-shell table.fixing {
+  margin: 0;
+  background: var(--bg);
+  border-top: 1px solid var(--ink);
+}
+.fixing-sticky-shell th {
+  background: rgba(247, 244, 237, 0.98);
+}
 
 /* Chart transition: subtle redraw effect */
 .price-chart .line { transition: stroke-dasharray 200ms ease; }

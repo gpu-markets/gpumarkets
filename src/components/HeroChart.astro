@@ -17,6 +17,10 @@
     <span class="aside">USD / GPU-hour</span>
   </div>
   <div class="eyebrow-rule"></div>
+  <p id="hero-chart-help" class="visually-hidden">
+    Interactive price chart. Hover or tap to inspect a daily fixing. When focused, use the left and right arrow keys to move through the series.
+  </p>
+  <div id="hero-chart-status" class="visually-hidden" aria-live="polite"></div>
   <svg
     id="hero-chart"
     class="price-chart"
@@ -24,6 +28,8 @@
     preserveAspectRatio="none"
     role="img"
     aria-label="Price over the last 180 days"
+    aria-describedby="hero-chart-help hero-chart-status"
+    tabindex="0"
   >
     <g class="gridlines" data-gridlines></g>
     <g class="y-labels" data-ylabels></g>
@@ -36,5 +42,21 @@
     <g class="annotations" data-annotations></g>
     <g class="x-ticks" data-xticks></g>
     <g class="x-labels" data-xlabels></g>
+    <line class="tooltip-line" data-tooltip-line x1="0" x2="0" y1="18" y2="338" visibility="hidden" />
+    <circle class="tooltip-point" data-tooltip-point cx="0" cy="0" r="3.2" visibility="hidden" />
+    <g class="tooltip-box" data-tooltip-box visibility="hidden">
+      <rect class="tooltip-bg" data-tooltip-bg x="0" y="0" width="10" height="10" rx="0" ry="0"></rect>
+      <text class="tooltip-date" data-tooltip-date x="0" y="0"></text>
+      <text class="tooltip-price" data-tooltip-price x="0" y="0"></text>
+    </g>
+    <rect
+      class="chart-hit-area"
+      data-hit-area
+      x="54"
+      y="18"
+      width="854"
+      height="320"
+      fill="transparent"
+    />
   </svg>
 </div>

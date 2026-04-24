@@ -83,7 +83,7 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
     <div class="wrap">
       <Eyebrow number="01" label="Training Tier · Latest Fixing" aside="8 series" />
       <FixingTable series={trainingTier} ariaLabel="Training-tier fixings" strikeAt={STRIKE_AT} />
-      <p class="footnote">
+      <p class="footnote fixing-footnote">
         Fixings quoted as <span class="mono">USD per GPU‑hour</span>,
         rounded to four decimal places. Δ columns show percentage change
         against the previous fix, the fix seven days ago, and the fix
@@ -101,7 +101,7 @@ const glanceItems: [GlanceItem, GlanceItem, GlanceItem] = [
     <div class="wrap">
       <Eyebrow number="02" label="Inference Tier · Latest Fixing" aside="5 series" />
       <FixingTable series={inferenceTier} ariaLabel="Inference-tier fixings" strikeAt={STRIKE_AT} />
-      <p class="footnote">
+      <p class="footnote fixing-footnote">
         Inference‑tier series are priced the same way as training
         series, but include consumer and workstation cards (RTX 4090, RTX
         5090) and low‑power accelerators (L4, T4) that dominate
