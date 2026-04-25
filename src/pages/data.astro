@@ -9,12 +9,8 @@ import Base from '../layouts/Base.astro';
 import Eyebrow from '../components/Eyebrow.astro';
 import Citation from '../components/Citation.astro';
 import { trainingTier, inferenceTier } from '../lib/series-data';
-
-const FIX_DATE = '2026-04-18';
-
-function slugify(ticker: string): string {
-  return ticker.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-');
-}
+import { seriesSlug } from '../lib/slug';
+import { FIX_DATE_ISO } from '../lib/constants';
 ---
 
 <Base title="Data · GPU Markets" currentPage="data">
@@ -78,10 +74,10 @@ function slugify(ticker: string): string {
           <ul class="per-series-list">
             {trainingTier.map((s) => (
               <li>
-                <a class="mono" href={`/data/series/${slugify(s.id)}.csv`}>
-                  /data/series/{slugify(s.id)}.csv
+                <a class="mono" href={`/data/series/${seriesSlug(s.id)}.csv`}>
+                  /data/series/{seriesSlug(s.id)}.csv
                 </a>
-                <span class="per-series-label"> · {s.label ?? s.id}</span>
+                <span class="per-series-label"> · <a href={`/series/${seriesSlug(s.id)}`}>{s.label ?? s.id}</a></span>
               </li>
             ))}
           </ul>
@@ -91,10 +87,10 @@ function slugify(ticker: string): string {
           <ul class="per-series-list">
             {inferenceTier.map((s) => (
               <li>
-                <a class="mono" href={`/data/series/${slugify(s.id)}.csv`}>
-                  /data/series/{slugify(s.id)}.csv
+                <a class="mono" href={`/data/series/${seriesSlug(s.id)}.csv`}>
+                  /data/series/{seriesSlug(s.id)}.csv
                 </a>
-                <span class="per-series-label"> · {s.label ?? s.id}</span>
+                <span class="per-series-label"> · <a href={`/series/${seriesSlug(s.id)}`}>{s.label ?? s.id}</a></span>
               </li>
             ))}
           </ul>
@@ -113,7 +109,7 @@ function slugify(ticker: string): string {
     </div>
   </section>
 
-  <Citation fixDate={FIX_DATE} />
+  <Citation fixDate={FIX_DATE_ISO} />
 
   <style>
     .per-series-grid {
@@ -157,6 +153,15 @@ function slugify(ticker: string): string {
     .per-series-label {
       color: var(--muted);
       font-size: 12.5px;
+    }
+    .per-series-label a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px dotted var(--rule);
+    }
+    .per-series-label a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
     }
   </style>
 

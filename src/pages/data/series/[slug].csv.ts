@@ -19,15 +19,10 @@
 import type { APIRoute, GetStaticPaths } from 'astro';
 import type { Series } from '../../../lib/types';
 import { allSeries } from '../../../lib/series-data';
+import { seriesSlug } from '../../../lib/slug';
+import { FIX_DATE_ISO, FIX_TIME_UTC } from '../../../lib/constants';
 
 export const prerender = true;
-
-const FIX_DATE_ISO = '2026-04-18';
-const FIX_TIME_UTC = '00:30';
-
-function slugify(ticker: string): string {
-  return ticker.replace(/^GPUM\./, '').toLowerCase().replace(/\./g, '-');
-}
 
 function esc(v: string | number | undefined): string {
   if (v === undefined || v === null) return '';
@@ -38,7 +33,7 @@ function esc(v: string | number | undefined): string {
 
 export const getStaticPaths: GetStaticPaths = () =>
   allSeries.map((s) => ({
-    params: { slug: slugify(s.id) },
+    params: { slug: seriesSlug(s.id) },
     props: { series: s },
   }));
 
@@ -95,7 +90,7 @@ export const GET: APIRoute = ({ props }) => {
   ].join(',');
 
   const body = header.join(',') + '\n' + row + '\n';
-  const filename = `gpumarkets-${slugify(s.id)}-${FIX_DATE_ISO}.csv`;
+  const filename = `gpumarkets-${seriesSlug(s.id)}-${FIX_DATE_ISO}.csv`;
 
   return new Response(body, {
     headers: {

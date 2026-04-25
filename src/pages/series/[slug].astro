@@ -1,0 +1,487 @@
+---
+/**
+ * Per-series detail page — one URL per series, FRED-style.
+ * Renders today's fix for a single series at /series/{slug}, where
+ * slug = seriesSlug(s.id) (see src/lib/slug.ts).
+ *
+ * BibTeX URL emitted by Citation.astro encodes /series/{slug}/{fixDate}
+ * (one path-segment deeper). That dated form 404s today and resolves
+ * once HANDOFF #7 wires up vintage routes — deliberate trade-off
+ * documented in the plan; do not double-publish to satisfy it.
+ */
+import type { Series } from '../../lib/types';
+import { allSeries } from '../../lib/series-data';
+import { seriesSlug } from '../../lib/slug';
+import { FIX_DATE_ISO, FIX_TIME_UTC, STRIKE_AT } from '../../lib/constants';
+import Base from '../../layouts/Base.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import Citation from '../../components/Citation.astro';
+
+export function getStaticPaths() {
+  return allSeries.map((s) => ({
+    params: { slug: seriesSlug(s.id) },
+    props: { series: s },
+  }));
+}
+
+interface Props {
+  series: Series;
+}
+
+const { series: s } = Astro.props;
+
+function pctClass(v: number): 'pos' | 'neg' | 'zero' {
+  if (v > 0) return 'pos';
+  if (v < 0) return 'neg';
+  return 'zero';
+}
+function pctSign(v: number): string {
+  if (v > 0) return '+';
+  if (v < 0) return '−';
+  return ' ';
+}
+function pctValue(v: number): string {
+  return Math.abs(v).toFixed(2) + '%';
+}
+
+function sparkContext(path: string): { firstY: number; lastX: number; lastY: number } {
+  const matches = [...path.matchAll(/([ML])([\d.]+),([\d.]+)/g)];
+  const first = matches[0];
+  const last = matches[matches.length - 1];
+  return {
+    firstY: first ? Number(first[3]) : 9,
+    lastX: last ? Number(last[2]) : 80,
+    lastY: last ? Number(last[3]) : 9,
+  };
+}
+
+const struckAt = s.fixedAt ?? STRIKE_AT;
+const struckDate = struckAt.slice(0, 10).replace(/-/g, '‑');
+const struckTime = struckAt.slice(11, 16);
+const isOffStrike = Boolean(s.fixedAt && s.fixedAt !== STRIKE_AT);
+
+const slug = seriesSlug(s.id);
+const csvUrl = `/data/series/${slug}.csv`;
+const seriesLabel = s.label ?? s.id;
+const tierLabel = s.tier === 'training' ? 'Training tier' : 'Inference tier';
+const [eligible, total] = s.venueCount.split('/');
+
+const hasCW =
+  typeof s.priceCW === 'number' && typeof s.deltaCWvsFix === 'number';
+const showCW = hasCW || Boolean(s.suppressedCW);
+
+type TierTermId = 't1' | 't2' | 't3';
+type TierBreakdownItem = { count: string; tier: string; termId: TierTermId };
+const tierItems: TierBreakdownItem[] = (s.venueTierBreakdown ?? '')
+  .split(' · ')
+  .map((part) => {
+    const [count, tier] = part.split(' ');
+    if (!count || !tier) return null;
+    const termId = tier.toLowerCase();
+    if (termId !== 't1' && termId !== 't2' && termId !== 't3') return null;
+    return { count, tier, termId };
+  })
+  .filter((item): item is TierBreakdownItem => item !== null);
+
+const spark = sparkContext(s.sparkPath);
+
+const pageTitle = `${seriesLabel} · GPU Markets`;
+const pageDescription =
+  `${seriesLabel} — ${s.chipName}, ${s.vram}, ${s.tenor}. ` +
+  `Daily fixing struck ${struckDate} · ${struckTime} UTC. ` +
+  `${s.obs.toLocaleString('en-US')} observations, ${eligible}/${total} venues.`;
+---
+
+<Base
+  title={pageTitle}
+  description={pageDescription}
+  currentPage="data"
+  withAppScripts={false}
+>
+  <section class="hero">
+    <div class="wrap">
+      <div class="series-id-row">
+        <span class="mono ticker">{s.id}</span>
+        <span class="series-id-sep">·</span>
+        <span class="tier-tag">{tierLabel}</span>
+      </div>
+      <h1>{s.chipName} <span class="head-sep">·</span> {s.tenor}</h1>
+      <p class="deck">
+        {s.vram} VRAM. Daily fixing struck <span class="mono">{struckDate}</span>
+        <span class="hair">·</span> <span class="mono">{struckTime} UTC</span>
+        {isOffStrike && (
+          <>
+            <span class="hair">·</span>
+            <span class="off-strike-pill">off‑strike</span>
+          </>
+        )}.
+        Open data, open methodology — see
+        <a href="/methodology">methodology</a> for the estimator and revision policy.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Current fixing" aside={FIX_DATE_ISO} />
+
+      <div class="fix-grid">
+        <div class="fix-headline">
+          <div class="fix-label">USD per GPU‑hour</div>
+          <div class="fix-price glance-big mono">${s.price.toFixed(4)}</div>
+        </div>
+
+        <dl class="fix-deltas">
+          <div>
+            <dt>Δ 1d</dt>
+            <dd class={`mono pct ${pctClass(s.delta1d)}`}>
+              <span class="sign">{pctSign(s.delta1d)}</span>{pctValue(s.delta1d)}
+            </dd>
+          </div>
+          <div>
+            <dt>Δ 7d</dt>
+            <dd class={`mono pct ${pctClass(s.delta7d)}`}>
+              <span class="sign">{pctSign(s.delta7d)}</span>{pctValue(s.delta7d)}
+            </dd>
+          </div>
+          <div>
+            <dt>Δ 30d</dt>
+            <dd class={`mono pct ${pctClass(s.delta30d)}`}>
+              <span class="sign">{pctSign(s.delta30d)}</span>{pctValue(s.delta30d)}
+            </dd>
+          </div>
+          <div>
+            <dt>Observations</dt>
+            <dd class="mono">{s.obs.toLocaleString('en-US')}</dd>
+          </div>
+          <div>
+            <dt>Venues eligible</dt>
+            <dd class="mono">{eligible}<span class="vnsep">/</span>{total}</dd>
+          </div>
+        </dl>
+
+        <div class="fix-spark">
+          <svg
+            class="spark"
+            width="320"
+            height="72"
+            viewBox="0 0 80 18"
+            preserveAspectRatio="none"
+            aria-label={`30-day price trajectory for ${seriesLabel}`}
+          >
+            <line
+              class="spark-baseline"
+              x1="0"
+              x2="80"
+              y1={spark.firstY}
+              y2={spark.firstY}
+            />
+            <path d={s.sparkPath} />
+            <circle class="spark-end" cx={spark.lastX} cy={spark.lastY} r="1.8" />
+          </svg>
+          <div class="fix-spark-caption">
+            30‑day trajectory — sparkline only. Full daily history
+            ships with the data‑repo wire‑up (Phase 2).
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {showCW && (
+    <section>
+      <div class="wrap">
+        <Eyebrow label="Capacity-weighted companion" />
+        <div class="cw-block">
+          <div class="cw-body">
+            <span class="cw-main">
+              <span class="mono">{s.id}.cw</span>
+              <span class="cw-sep">·</span>
+              {hasCW ? (
+                <>
+                  <span class="mono cw-price">${s.priceCW!.toFixed(4)}</span>
+                  <span class="cw-sep">·</span>
+                  <span class={`pct ${pctClass(s.deltaCWvsFix!)} cw-delta`}>
+                    <span class="sign">{pctSign(s.deltaCWvsFix!)}</span>
+                    {Math.abs(s.deltaCWvsFix!).toFixed(2)}%
+                  </span>
+                  <span class="cw-context">vs fix</span>
+                </>
+              ) : (
+                <span class="cw-context">suppressed · {s.suppressedCW}</span>
+              )}
+            </span>
+            {hasCW && tierItems.length > 0 && (
+              <span class="cw-breakdown">
+                {tierItems.map((item, index) => (
+                  <>
+                    {index > 0 && <span class="cw-break-sep">·</span>}
+                    <span class="cw-breakdown-item">
+                      <span class="mono">{item.count}</span>
+                      <span>{item.tier}</span>
+                    </span>
+                  </>
+                ))}
+              </span>
+            )}
+          </div>
+        </div>
+        <p class="footnote">
+          The <span class="mono">.cw</span> companion weights surviving venues by
+          published capacity rather than equal‑weight. It is published as a
+          research series — the headline fix above remains the citable
+          figure. See <a href="/methodology">methodology</a> for weighting and
+          suppression rules.
+        </p>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Specifications" aside={s.chipName} />
+      <dl class="page-specs">
+        {s.specs.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd class="mono">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  {s.footnotes && s.footnotes.length > 0 && (
+    <section>
+      <div class="wrap">
+        <Eyebrow label="Notes on this fixing" />
+        <ol class="page-fixing-notes">
+          {s.footnotes.map((text) => (
+            <li>{text}</li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="wrap">
+      <Eyebrow label="Downloads" />
+      <div class="downloads">
+        <div class="row">
+          <div>
+            <div class="name">
+              {seriesLabel} · current fix
+              <span class="sub">CSV — today's fixing for this series only.</span>
+            </div>
+          </div>
+          <div class="size mono">CSV</div>
+          <div><a class="dl mono" href={csvUrl}>{csvUrl}</a></div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="name">
+              All series · current fix
+              <span class="sub">CSV — every series in both tiers, single file.</span>
+            </div>
+          </div>
+          <div class="size mono">CSV</div>
+          <div><a class="dl mono" href="/data/fixings.csv">/data/fixings.csv</a></div>
+        </div>
+        <div class="row">
+          <div>
+            <div class="name">
+              Methodology
+              <span class="sub">Estimator, revision policy, fixing calendar.</span>
+            </div>
+          </div>
+          <div class="size mono">HTML</div>
+          <div><a class="dl mono" href="/methodology">/methodology</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Citation
+    seriesId={s.id}
+    seriesLabel={seriesLabel}
+    fixDate={FIX_DATE_ISO}
+    fixTimeUTC={FIX_TIME_UTC}
+  />
+</Base>
+
+<style>
+  /* Hero adjustments — tighter than landing page hero. */
+  .series-id-row {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .series-id-row .ticker {
+    font-size: 12.5px;
+    color: var(--ink);
+    border-bottom: 1px dotted var(--rule);
+    padding-bottom: 1px;
+  }
+  .series-id-row .series-id-sep { color: #8b826f; }
+  .series-id-row .tier-tag {
+    font-family: var(--ui);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 11px;
+  }
+  .head-sep { color: #8b826f; font-weight: 400; }
+  .hair { color: #8b826f; }
+
+  .off-strike-pill {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: #5d5748;
+    border: 1px solid var(--rule);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  /* Current-fix grid: headline + deltas + sparkline. */
+  .fix-grid {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 1.4fr;
+    grid-template-areas:
+      "headline deltas"
+      "spark spark";
+    gap: 18px 32px;
+    align-items: start;
+    margin: 14px 0 4px;
+  }
+  @media (max-width: 720px) {
+    .fix-grid {
+      grid-template-columns: 1fr;
+      grid-template-areas: "headline" "deltas" "spark";
+    }
+  }
+  .fix-headline { grid-area: headline; }
+  .fix-deltas { grid-area: deltas; }
+  .fix-spark { grid-area: spark; margin-top: 4px; }
+
+  .fix-label {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .fix-price {
+    /* .glance-big provides the size; this just controls line-height. */
+    line-height: 1.05;
+  }
+
+  .fix-deltas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px 24px;
+    margin: 0;
+    padding: 0;
+  }
+  .fix-deltas > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .fix-deltas dt {
+    font-family: var(--ui);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+  .fix-deltas dd {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .fix-deltas dd.pct .sign { padding-right: 1px; }
+  .vnsep { color: #8b826f; padding: 0 1px; }
+
+  .fix-spark .spark {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    display: block;
+  }
+  .fix-spark-caption {
+    font-family: var(--ui);
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-top: 6px;
+    max-width: 60ch;
+  }
+
+  /* CW block — replaces the .cw-row td backdrop in standalone context. */
+  .cw-block {
+    background: #f1ede2;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin: 12px 0 6px;
+  }
+
+  /* Specs grid — page variant of .spec-row .specs. */
+  .page-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin: 14px 0 4px;
+    padding: 0;
+    background: #efe9db;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  @media (max-width: 560px) {
+    .page-specs { grid-template-columns: 1fr; }
+  }
+  .page-specs > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 8px 14px;
+    border-bottom: 1px solid #d8d0be;
+  }
+  .page-specs > div:last-child { border-bottom: 0; }
+  .page-specs > div:nth-last-child(2):nth-child(odd) { border-bottom: 0; }
+  .page-specs dt {
+    font-family: var(--ui);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0;
+  }
+  .page-specs dd {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--ink);
+    text-align: right;
+  }
+
+  /* Footnotes — simpler than FixingTable's anchored variant. */
+  .page-fixing-notes {
+    margin: 12px 0 0;
+    padding: 0 0 0 24px;
+    list-style: decimal;
+  }
+  .page-fixing-notes li {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--ink);
+    padding: 4px 0;
+  }
+</style>

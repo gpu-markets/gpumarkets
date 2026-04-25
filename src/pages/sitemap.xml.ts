@@ -4,12 +4,14 @@
  * pages, and one URL per research note.
  */
 import type { APIRoute } from 'astro';
+import { allSeries } from '../lib/series-data';
+import { seriesSlug } from '../lib/slug';
 
 export const prerender = true;
 
 const SITE = 'https://gpumarkets.dev';
 
-const ROUTES: Array<{ path: string; changefreq: 'daily' | 'monthly' }> = [
+const STATIC_ROUTES: Array<{ path: string; changefreq: 'daily' | 'monthly' }> = [
   { path: '/',             changefreq: 'daily'   },
   { path: '/methodology',  changefreq: 'monthly' },
   { path: '/data',         changefreq: 'daily'   },
@@ -17,6 +19,14 @@ const ROUTES: Array<{ path: string; changefreq: 'daily' | 'monthly' }> = [
   { path: '/research',     changefreq: 'monthly' },
   { path: '/news',         changefreq: 'daily'   },
 ];
+
+const SERIES_ROUTES: Array<{ path: string; changefreq: 'daily' | 'monthly' }> =
+  allSeries.map((s) => ({
+    path: `/series/${seriesSlug(s.id)}`,
+    changefreq: 'daily',
+  }));
+
+const ROUTES = [...STATIC_ROUTES, ...SERIES_ROUTES];
 
 export const GET: APIRoute = () => {
   const lastmod = new Date().toISOString().slice(0, 10);
